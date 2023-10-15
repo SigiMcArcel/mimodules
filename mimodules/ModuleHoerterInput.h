@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <mi/midriver/I2CDriver.h>
+#include </mi/midriver/I2CDriver.h>
 #include "ModuleBase.h"
 
 namespace mimodule

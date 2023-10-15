@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "ModuleInterface.h"
-#include <mi/miutils/Timer.h>
+#include </mi/miutils/Timer.h>
 
 namespace mimodule
 {

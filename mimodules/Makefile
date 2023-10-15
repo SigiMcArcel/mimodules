@@ -2,7 +2,7 @@
 
 DESTDIR=
 LIBDIR=/usr/lib
-INCLUDEDIR=/usr/include /usr/include/mi
+INCLUDEDIR=/usr/include
 
 INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall
