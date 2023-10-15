@@ -2,13 +2,13 @@
 
 DESTDIR=
 LIBDIR=/usr/lib
-INCLUDEDIR=/usr/include
+INCLUDEDIR=/usr/include /usr/include/mi
 
 INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall
 LD_FLAGS = -shared -lpthread -lmidriver -lmiutils
 
-SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp ModuleBase.cpp
+SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 LIBRARYOUT=libmimodule.so
