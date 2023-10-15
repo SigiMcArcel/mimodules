@@ -11,7 +11,7 @@ LD_FLAGS = -shared -lpthread -lmidriver -lmiutils
 SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
-LIBRARYOUT=libmidriver.so
+LIBRARYOUT=libmimodule.so
 
 
 .cpp.o:
