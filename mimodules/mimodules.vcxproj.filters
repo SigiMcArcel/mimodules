@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{588112dc-3ed3-43c4-83b8-bc30b27ec65e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ModuleHoerterInput.h" />
+    <ClInclude Include="ModuleBase.h" />
+    <ClInclude Include="ModuleInterface.h" />
+    <ClInclude Include="ModuleBuffer.h" />
+    <ClInclude Include="ModuleChannel.h" />
+    <ClInclude Include="ModuleManager.h" />
+    <ClInclude Include="ModuleTypes.h" />
+    <ClInclude Include="ModuleHoerterOutput.h" />
+    <ClInclude Include="ModuleValue.h" />
+    <ClInclude Include="ModulePointer.h" />
+    <ClInclude Include="ModuleMiPotentiometer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ModuleHoerterInput.cpp" />
+    <ClCompile Include="ModuleBase.cpp" />
+    <ClCompile Include="ModuleBuffer.cpp" />
+    <ClCompile Include="ModuleManager.cpp" />
+    <ClCompile Include="ModuleHoerterOutput.cpp" />
+    <ClCompile Include="ModuleValue.cpp" />
+    <ClCompile Include="ModulePointer.cpp" />
+    <ClCompile Include="ModuleMiPotentiometer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="install.sh" />
+    <None Include="Makefile" />
+  </ItemGroup>
+</Project>
