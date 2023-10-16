@@ -1,8 +1,7 @@
-
-
 DESTDIR=
-LIBDIR=/usr/lib
-INCLUDEDIR=/usr/include
+prefix=/usr
+includedir=$(prefix)/include
+libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall
@@ -23,16 +22,19 @@ clean:
 	
 
 install: $(LIBRARYOUT)
-	mkdir -p $(DESTDIR)/$(LIBDIR)
-	mkdir -p $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleBase.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleBuffer.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleHoerterInput.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModulePointer.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleManager.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleValue.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleTypes.h $(DESTDIR)/$(INCLUDEDIR) 
-	cp ModuleChannel.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleInterface.h $(DESTDIR)/$(INCLUDEDIR)
-	cp ModuleMiPotentiometer.h $(DESTDIR)/$(INCLUDEDIR)
-	cp $(LIBRARYOUT) $(DESTDIR)/$(LIBDIR)
+	install -d $(DESTDIR)/${libdir}
+	install -D -m 0644 libmidriver.so $(DESTDIR)/${libdir}/$(LIBRARYOUT)
+	install -d $(DESTDIR)/${includedir}
+	install -d $(DESTDIR)/${includedir}/mi
+	install -d $(DESTDIR)/${includedir}/mi/mimodule
+	install -D -m 0644 ModuleBase.h $(DESTDIR)/${includedir}/mi/midriver/ModuleBase.h
+	install -D -m 0644 ModuleBuffer.h $(DESTDIR)/${includedir}/mi/midriver/ModuleBuffer.h
+	install -D -m 0644 ModuleHoerterInput.h $(DESTDIR)/${includedir}/mi/midriver/ModuleHoerterInput.h
+	install -D -m 0644 ModulePointer.h $(DESTDIR)/${includedir}/mi/midriver/ModulePointer.h
+	install -D -m 0644 DriverBase.h $(DESTDIR)/${includedir}/mi/midriver/DriverBase.h
+	install -D -m 0644 ModuleManager.h $(DESTDIR)/${includedir}/mi/midriver/ModuleManager.h
+	install -D -m 0644 ModuleValue.h $(DESTDIR)/${includedir}/mi/midriver/ModuleValue.h
+	install -D -m 0644 ModuleTypes.h $(DESTDIR)/${includedir}/mi/midriver/ModuleTypes.h
+	install -D -m 0644 ModuleChannel.h $(DESTDIR)/${includedir}/mi/midriver/ModuleChannel.h
+	install -D -m 0644 ModuleInterface.h $(DESTDIR)/${includedir}/mi/midriver/ModuleInterface.h
+	install -D -m 0644 ModuleMiPotentiometer.h $(DESTDIR)/${includedir}/mi/midriver/ModuleMiPotentiometer.h
