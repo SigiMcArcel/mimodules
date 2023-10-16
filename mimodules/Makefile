@@ -31,7 +31,7 @@ install: $(LIBRARYOUT)
 	install -D -m 0644 ModuleBuffer.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleBuffer.h
 	install -D -m 0644 ModuleHoerterInput.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleHoerterInput.h
 	install -D -m 0644 ModulePointer.h $(DESTDIR)/${includedir}/mi/libmimodules/ModulePointer.h
-	install -D -m 0644 DriverBase.h $(DESTDIR)/${includedir}/mi/libmimodules/DriverBase.h
+	install -D -m 0644 ModuleHoerterOutput.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleHoerterOutput.h
 	install -D -m 0644 ModuleManager.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleManager.h
 	install -D -m 0644 ModuleValue.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleValue.h
 	install -D -m 0644 ModuleTypes.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleTypes.h
