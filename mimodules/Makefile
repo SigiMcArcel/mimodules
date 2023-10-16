@@ -23,18 +23,18 @@ clean:
 
 install: $(LIBRARYOUT)
 	install -d $(DESTDIR)/${libdir}
-	install -D -m 0644 libmidriver.so $(DESTDIR)/${libdir}/$(LIBRARYOUT)
+	install -D -m 0644 $(LIBRARYOUT) $(DESTDIR)/${libdir}/$(LIBRARYOUT)
 	install -d $(DESTDIR)/${includedir}
 	install -d $(DESTDIR)/${includedir}/mi
 	install -d $(DESTDIR)/${includedir}/mi/mimodule
-	install -D -m 0644 ModuleBase.h $(DESTDIR)/${includedir}/mi/midriver/ModuleBase.h
-	install -D -m 0644 ModuleBuffer.h $(DESTDIR)/${includedir}/mi/midriver/ModuleBuffer.h
-	install -D -m 0644 ModuleHoerterInput.h $(DESTDIR)/${includedir}/mi/midriver/ModuleHoerterInput.h
-	install -D -m 0644 ModulePointer.h $(DESTDIR)/${includedir}/mi/midriver/ModulePointer.h
-	install -D -m 0644 DriverBase.h $(DESTDIR)/${includedir}/mi/midriver/DriverBase.h
-	install -D -m 0644 ModuleManager.h $(DESTDIR)/${includedir}/mi/midriver/ModuleManager.h
-	install -D -m 0644 ModuleValue.h $(DESTDIR)/${includedir}/mi/midriver/ModuleValue.h
-	install -D -m 0644 ModuleTypes.h $(DESTDIR)/${includedir}/mi/midriver/ModuleTypes.h
-	install -D -m 0644 ModuleChannel.h $(DESTDIR)/${includedir}/mi/midriver/ModuleChannel.h
-	install -D -m 0644 ModuleInterface.h $(DESTDIR)/${includedir}/mi/midriver/ModuleInterface.h
-	install -D -m 0644 ModuleMiPotentiometer.h $(DESTDIR)/${includedir}/mi/midriver/ModuleMiPotentiometer.h
+	install -D -m 0644 ModuleBase.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleBase.h
+	install -D -m 0644 ModuleBuffer.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleBuffer.h
+	install -D -m 0644 ModuleHoerterInput.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleHoerterInput.h
+	install -D -m 0644 ModulePointer.h $(DESTDIR)/${includedir}/mi/libmimodules/ModulePointer.h
+	install -D -m 0644 DriverBase.h $(DESTDIR)/${includedir}/mi/libmimodules/DriverBase.h
+	install -D -m 0644 ModuleManager.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleManager.h
+	install -D -m 0644 ModuleValue.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleValue.h
+	install -D -m 0644 ModuleTypes.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleTypes.h
+	install -D -m 0644 ModuleChannel.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleChannel.h
+	install -D -m 0644 ModuleInterface.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleInterface.h
+	install -D -m 0644 ModuleMiPotentiometer.h $(DESTDIR)/${includedir}/mi/libmimodules/ModuleMiPotentiometer.h
