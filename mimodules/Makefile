@@ -4,7 +4,7 @@ includedir=$(prefix)/include
 libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
-CXX_FLAGS = -fpic -Wall
+CXX_FLAGS = -fpic -Wall -Wl,--no-undefined
 LD_FLAGS = -shared -lpthread -lmidriver -lmiutils
 
 SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp
