@@ -6,21 +6,12 @@
 
 namespace mimodule
 {
-	namespace hoerterinput
-	{
-		class ValueChangedEvent
-		{
-		public:
-			virtual void ValueChanged(bool val, const std::string& id) = 0;
-		};
-	}
-
 	class ModuleHoerterInput : public mimodule::ModuleBase
 	{
 	private:
 		miDriver::I2CDriver _I2CDriver;
 		uint8_t _Address;
-		std::vector<hoerterinput::ValueChangedEvent*> _Events;
+		
 		
 		
 	protected:

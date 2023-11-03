@@ -40,6 +40,8 @@
     <ClCompile Include="ModuleHoerterInput.cpp" />
     <ClCompile Include="ModuleHoerterOutput.cpp" />
     <ClCompile Include="ModuleManager.cpp" />
+    <ClCompile Include="ModuleMidiInput.cpp" />
+    <ClCompile Include="ModuleMidiOutput.cpp" />
     <ClCompile Include="ModuleMiPotentiometer.cpp" />
     <ClCompile Include="ModulePointer.cpp" />
     <ClCompile Include="ModuleValue.cpp" />
@@ -52,6 +54,8 @@
     <ClInclude Include="ModuleHoerterOutput.h" />
     <ClInclude Include="ModuleInterface.h" />
     <ClInclude Include="ModuleManager.h" />
+    <ClInclude Include="ModuleMidiInput.h" />
+    <ClInclude Include="ModuleMidiOutput.h" />
     <ClInclude Include="ModuleMiPotentiometer.h" />
     <ClInclude Include="ModulePointer.h" />
     <ClInclude Include="ModuleTypes.h" />

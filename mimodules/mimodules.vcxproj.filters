@@ -17,6 +17,8 @@
     <ClInclude Include="ModuleValue.h" />
     <ClInclude Include="ModulePointer.h" />
     <ClInclude Include="ModuleMiPotentiometer.h" />
+    <ClInclude Include="ModuleMidiOutput.h" />
+    <ClInclude Include="ModuleMidiInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleHoerterInput.cpp" />
@@ -27,6 +29,8 @@
     <ClCompile Include="ModuleValue.cpp" />
     <ClCompile Include="ModulePointer.cpp" />
     <ClCompile Include="ModuleMiPotentiometer.cpp" />
+    <ClCompile Include="ModuleMidiOutput.cpp" />
+    <ClCompile Include="ModuleMidiInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="install.sh" />
