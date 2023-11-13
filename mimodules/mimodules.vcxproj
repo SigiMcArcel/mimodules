@@ -125,7 +125,7 @@
       <Command>cp $(RemoteDebuggerCommand) /usr/lib </Command>
     </RemotePostBuildEvent>
     <Link>
-      <LibraryDependencies>pthread;midriver;miutils</LibraryDependencies>
+      <LibraryDependencies>pthread;midriver;miutils;asound</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>

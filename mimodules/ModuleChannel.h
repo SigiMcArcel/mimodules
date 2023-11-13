@@ -23,18 +23,24 @@ namespace mimodule
 		ModuleValue _Value;
 		ModuleValue _LastValue;
 		ModulChannelDirection _Direction;
+		uint32_t _Parameter;
 		mimodule::ModuleValueChangedEvent* _Event;
 		
 
 	public:
 		ModuleChannel() = default;
-		ModuleChannel(const std::string& id, const ModulValueType type, ModuleBitOffset bitOffset, ModulChannelDirection direction)
+		ModuleChannel(const std::string& id, 
+			const ModulValueType type, 
+			const ModuleBitOffset bitOffset,
+			const ModulChannelDirection direction,
+			const uint32_t parameter = 0)
 			:_Id(id)
 			, _BitOffset(bitOffset)
 			, _Type(type)
 			, _Value(type)
 			, _LastValue(type)
 			, _Direction(direction)
+			, _Parameter(parameter)
 			, _Event(nullptr)
 			
 		{
@@ -48,14 +54,20 @@ namespace mimodule
 			, _Value(other._Value)
 			, _LastValue(other._LastValue)
 			, _Direction(other._Direction)
+			, _Parameter(other._Parameter)
 			, _Event(other._Event)
 		{
 
 		}
 
-		void registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent)
+		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent)
 		{
-			_Event = valueChangedEvent;
+			if (valueChangedEvent != nullptr)
+			{
+				_Event = valueChangedEvent;
+				return true;
+			}
+			return false;
 		}
 		const std::string& id() const
 		{
@@ -85,6 +97,10 @@ namespace mimodule
 		mimodule::ModuleValueChangedEvent* valueChangedEvent()
 		{
 			return _Event;
+		}
+		uint32_t parameter() const
+		{
+			return _Parameter;
 		}
 
 		void setValue(mimodule::ModuleBuffer& iobuffer)

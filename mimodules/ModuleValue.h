@@ -110,8 +110,14 @@ namespace mimodule
 
 		friend bool& operator>>(bool& value, ModuleValue& moduleValue)
 		{
-			*((bool*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
+			bool tmp = *((uint8_t*)(moduleValue._Buffer.pointer()));
+			if (tmp != value)
+			{
+				*((bool*)(moduleValue._Buffer.pointer())) = value;
+
+				moduleValue._Changed = true;
+			}
+			
 			return value;
 		}
 
@@ -251,6 +257,7 @@ namespace mimodule
 		friend double& operator>>(double& value, ModuleValue& moduleValue)
 		{
 			*((double*)(moduleValue._Buffer.pointer())) = value;
+			
 			moduleValue._Changed = true;
 			return value;
 		}
