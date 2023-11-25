@@ -7,7 +7,7 @@ INCLUDES = -I. -I/.
 CXX_FLAGS = -fpic -Wall -Wl,--no-undefined
 LD_FLAGS = -shared -lpthread -lmidriver -lmiutils
 
-SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp
+SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp ModuleMidiOutput.cpp ModuleMidiInput.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 LIBRARYOUT=libmimodules.so
@@ -38,3 +38,5 @@ install: $(LIBRARYOUT)
 	install -D -m 0644 ModuleChannel.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleChannel.h
 	install -D -m 0644 ModuleInterface.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleInterface.h
 	install -D -m 0644 ModuleMiPotentiometer.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleMiPotentiometer.h
+	install -D -m 0644 ModuleMidiInput.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleMidiInput.h
+	install -D -m 0644 ModuleMidiOutput.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleMidiOutput.h
