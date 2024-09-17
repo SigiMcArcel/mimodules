@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <stdint.h>
+#include <new>
 #include "ModuleInterface.h"
 #include "ModuleBuffer.h"
 #include "ModuleValue.h"
@@ -12,7 +13,12 @@ namespace mimodule
 		Input,
 		Output
 	};
-	
+	typedef struct ModuleChannelParameter_t
+	{
+		size_t Size;
+		//Rest of structur driver depended
+	}ModuleChannelParameter;
+
 	class ModuleChannel
 	{
 	private:
@@ -23,7 +29,7 @@ namespace mimodule
 		ModuleValue _Value;
 		ModuleValue _LastValue;
 		ModulChannelDirection _Direction;
-		uint32_t _Parameter;
+		ModuleChannelParameter* _Parameter;
 		mimodule::ModuleValueChangedEvent* _Event;
 		
 
@@ -33,18 +39,21 @@ namespace mimodule
 			const ModulValueType type, 
 			const ModuleBitOffset bitOffset,
 			const ModulChannelDirection direction,
-			const uint32_t parameter = 0)
+			const ModuleChannelParameter* parameter = nullptr)
 			:_Id(id)
 			, _BitOffset(bitOffset)
 			, _Type(type)
 			, _Value(type)
 			, _LastValue(type)
 			, _Direction(direction)
-			, _Parameter(parameter)
 			, _Event(nullptr)
 			
 		{
-			;
+			if (parameter != nullptr)
+			{
+				_Parameter = (ModuleChannelParameter*) ::operator new(parameter->Size);
+				memcpy(_Parameter, parameter, parameter->Size);
+			}
 		}
 
 		ModuleChannel(const ModuleChannel& other)
@@ -54,12 +63,19 @@ namespace mimodule
 			, _Value(other._Value)
 			, _LastValue(other._LastValue)
 			, _Direction(other._Direction)
-			, _Parameter(other._Parameter)
+			, _Parameter(other._Parameter) 
 			, _Event(other._Event)
 		{
-
+			if (other._Parameter != nullptr)
+			{
+				_Parameter = (ModuleChannelParameter*) ::operator new(other._Parameter->Size);
+				memcpy(_Parameter, other._Parameter, other._Parameter->Size);
+			}
 		}
-
+		~ModuleChannel()
+		{
+			delete _Parameter;
+		}
 		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent)
 		{
 			if (valueChangedEvent != nullptr)
@@ -98,7 +114,7 @@ namespace mimodule
 		{
 			return _Event;
 		}
-		uint32_t parameter() const
+		ModuleChannelParameter* parameter() const
 		{
 			return _Parameter;
 		}

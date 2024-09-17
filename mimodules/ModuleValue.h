@@ -32,6 +32,10 @@ namespace mimodule
 		bool _Changed;
 
 	public:
+		ModulValueType getType()
+		{
+			return _Type;
+		}
 
 		int32_t getSizeFromType(ModulValueType type)
 		{

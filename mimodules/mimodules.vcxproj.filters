@@ -19,6 +19,11 @@
     <ClInclude Include="ModuleMiPotentiometer.h" />
     <ClInclude Include="ModuleMidiOutput.h" />
     <ClInclude Include="ModuleMidiInput.h" />
+    <ClInclude Include="ModuleGecon32Input.h" />
+    <ClInclude Include="ModuleGecon32Output.h" />
+    <ClInclude Include="ModuleMiPhoneNumber.h" />
+    <ClInclude Include="ModuleMiSevenSegment.h" />
+    <ClInclude Include="ModuleMiRpiGpio.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleHoerterInput.cpp" />
@@ -31,6 +36,11 @@
     <ClCompile Include="ModuleMiPotentiometer.cpp" />
     <ClCompile Include="ModuleMidiOutput.cpp" />
     <ClCompile Include="ModuleMidiInput.cpp" />
+    <ClCompile Include="ModuleGecon32Input.cpp" />
+    <ClCompile Include="ModuleGecon32Output.cpp" />
+    <ClCompile Include="ModuleMiPhoneNumber.cpp" />
+    <ClCompile Include="ModuleMiSevenSegment.cpp" />
+    <ClCompile Include="ModuleMiRpiGpio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="install.sh" />

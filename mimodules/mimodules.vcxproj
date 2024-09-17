@@ -37,12 +37,17 @@
   <ItemGroup>
     <ClCompile Include="ModuleBase.cpp" />
     <ClCompile Include="ModuleBuffer.cpp" />
+    <ClCompile Include="ModuleGecon32Input.cpp" />
+    <ClCompile Include="ModuleGecon32Output.cpp" />
     <ClCompile Include="ModuleHoerterInput.cpp" />
     <ClCompile Include="ModuleHoerterOutput.cpp" />
     <ClCompile Include="ModuleManager.cpp" />
     <ClCompile Include="ModuleMidiInput.cpp" />
     <ClCompile Include="ModuleMidiOutput.cpp" />
+    <ClCompile Include="ModuleMiPhoneNumber.cpp" />
     <ClCompile Include="ModuleMiPotentiometer.cpp" />
+    <ClCompile Include="ModuleMiRpiGpio.cpp" />
+    <ClCompile Include="ModuleMiSevenSegment.cpp" />
     <ClCompile Include="ModulePointer.cpp" />
     <ClCompile Include="ModuleValue.cpp" />
   </ItemGroup>
@@ -50,13 +55,18 @@
     <ClInclude Include="ModuleBase.h" />
     <ClInclude Include="ModuleBuffer.h" />
     <ClInclude Include="ModuleChannel.h" />
+    <ClInclude Include="ModuleGecon32Input.h" />
+    <ClInclude Include="ModuleGecon32Output.h" />
     <ClInclude Include="ModuleHoerterInput.h" />
     <ClInclude Include="ModuleHoerterOutput.h" />
     <ClInclude Include="ModuleInterface.h" />
     <ClInclude Include="ModuleManager.h" />
     <ClInclude Include="ModuleMidiInput.h" />
     <ClInclude Include="ModuleMidiOutput.h" />
+    <ClInclude Include="ModuleMiPhoneNumber.h" />
     <ClInclude Include="ModuleMiPotentiometer.h" />
+    <ClInclude Include="ModuleMiRpiGpio.h" />
+    <ClInclude Include="ModuleMiSevenSegment.h" />
     <ClInclude Include="ModulePointer.h" />
     <ClInclude Include="ModuleTypes.h" />
     <ClInclude Include="ModuleValue.h" />

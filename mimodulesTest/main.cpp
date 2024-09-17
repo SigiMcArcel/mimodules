@@ -7,15 +7,23 @@
 #include <mi/mimodules/ModulePointer.h>
 #include <mi/mimodules/ModuleMidiInput.h>
 #include <mi/mimodules/ModuleMidiOutput.h>
+#include <mi/mimodules/ModuleGecon32Input.h>
+#include <mi/mimodules/ModuleGecon32Output.h>
+#include <mi/mimodules/ModuleMiPhoneNumber.h>
+#include <mi/mimodules/ModuleMiRpiGpio.h>
+#include <mi/mimodules/ModuleMiSevenSegment.h>
+
+
+
 #include <iostream>
 #include <typeinfo>
 
 #define PRINT_NAME(x) std::cout << #x << " - " << typeid(x).name() << '\n'
 
-class MidiEvents :public mimodule::ModuleValueChangedEvent
+class VolumeEvents :public mimodule::ModuleValueChangedEvent
 {
 public:
-    MidiEvents()
+    VolumeEvents()
     {
 
     }
@@ -24,45 +32,190 @@ public:
     {
         bool val = false;
         val << value;
-        printf("ValueChanged % s value = %d\n", id.c_str(), val);
+        printf(" VolumeEvents ValueChanged % s value = %d\n", id.c_str(), val);
+    }
+
+};
+
+class GeconEvents :public mimodule::ModuleValueChangedEvent
+{
+public:
+    GeconEvents()
+    {
+
+    }
+    // Geerbt über ModuleValueChangedEvent
+    virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override
+    {
+        bool val = false;
+        val << value;
+        printf("GeconEvents ValueChanged % s value = %d\n", id.c_str(), val);
+    }
+
+};
+
+class GeconEvents2 :public mimodule::ModuleValueChangedEvent
+{
+public:
+    GeconEvents2()
+    {
+
+    }
+    // Geerbt über ModuleValueChangedEvent
+    virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override
+    {
+        bool val = false;
+        val << value;
+        printf("GeconEvents2 ValueChanged % s value = %d\n", id.c_str(), val);
+    }
+
+};
+
+class PhoneNumberEvents :public mimodule::ModuleValueChangedEvent
+{
+public:
+    PhoneNumberEvents()
+    {
+
+    }
+    // Geerbt über ModuleValueChangedEvent
+    virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override
+    {
+        bool val = false;
+        val << value;
+        printf("PhoneNumberEvents ValueChanged % s value = %d\n", id.c_str(), val);
+    }
+
+};
+
+class PhoneJackEvents : public mimodule::ModuleValueChangedEvent
+{
+public:
+    PhoneJackEvents()
+    {
+
+    }
+    // Geerbt über ModuleValueChangedEvent
+    virtual void ValueChanged(mimodule::ModuleValue & value, const std::string & id) override
+    {
+        bool val = false;
+        val << value;
+        printf("PhoneJackEvents ValueChanged % s value = %d\n", id.c_str(), val);
+    }
+
+};
+
+class GPIOEvents :public mimodule::ModuleValueChangedEvent
+{
+public:
+    GPIOEvents()
+    {
+
+    }
+    // Geerbt über ModuleValueChangedEvent
+    virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override
+    {
+        bool val = false;
+        val << value;
+        printf("GPIOEvents ValueChanged % s value = %d\n", id.c_str(), val);
     }
 
 };
 
 int main()
 {
-    mimodule::ModuleMidiInput input(0, "Inputs");
-    mimodule::ModuleMidiOutput output0(0, "Ouputs0");
-    mimodule::ModuleMidiOutput output1(1, "Ouputs1");
     bool blink = false;
+    int segVal = 0;
+    mimodule::ModuleGecon32Input geconIn1("", 1, "geconIn1");
+    mimodule::ModuleGecon32Input geconIn2("", 2, "geconIn2");
+    mimodule::ModuleGecon32Output geconOut3("", 3, "geconOut3");
+    mimodule::ModuleGecon32Output geconOut4("", 4, "geconOut4");
+    mimodule::ModuleMiPhoneNumber phoneNumber(5, "phone", 27, 28);
+    mimodule::ModuleMiRpiGpioConfiguration conf;
+    std::vector<mimodule::ModuleMiRpiGpioConfiguration> confs;
+    conf.Dir = mimodule::ModulChannelDirection::Input;
+    conf.Number = 27;
+    conf.State = mimodule::ModuleMiRpiGpioState::Active;
+    confs.push_back(conf);
+    mimodule::ModuleMiRpiGpio phoneJack("PhoneJack", confs);
+    mimodule::ModuleMiSevenSegment sevenofnine("", "sevenofnine");
+    mimodule::ModuleMiPotentiometer ModulVolume(0x42, 3, "Volume");
 
-    MidiEvents* events = new MidiEvents();
-    for (int i = 1; i < 65; i++)
+
+    //setup phone nummer
+    PhoneNumberEvents* _PhoneNumberEvents = new PhoneNumberEvents();
+    phoneNumber.getChannel("PhoneNumber")->registerChannelEvent(_PhoneNumberEvents);
+    //setup gecon
+    GeconEvents* _GeconEvents1 = new GeconEvents();
+    GeconEvents2* _GeconEvents2 = new GeconEvents2();
+    for (int i = 1 ; i < 33 ; i++)
     {
         std::string Id("E");
         Id.append(std::to_string(i));
-        input.getChannel(Id)->registerChannelEvent(events);
+        geconIn1.getChannel(Id)->registerChannelEvent(_GeconEvents1);
+        geconIn2.getChannel(Id)->registerChannelEvent(_GeconEvents2);
+        
     }
 
+    //setup module volume
+    VolumeEvents* _VolumeEvents = new VolumeEvents();
+    ModulVolume.getChannel("Potentiometer")->registerChannelEvent(_VolumeEvents);
+
+    //setup phoneJack
+    GPIOEvents* _GPIOEvents = new GPIOEvents();
+    ModulVolume.getChannel("GPIO27")->registerChannelEvent(_GPIOEvents);
+
     mimodule::ModuleManager man(20);
-    man.addModule(&input);
-    man.addModule(&output0);
-    man.addModule(&output1);
+    man.addModule(&phoneNumber);
+    man.addModule(&sevenofnine);
+    man.addModule(&geconIn1);
+    man.addModule(&geconIn2);
+    man.addModule(&geconOut3);
+    man.addModule(&geconOut4);
+    man.addModule(&ModulVolume);
+    man.addModule(&phoneJack);
     man.start();
+
+
 
     while (1)
     {
-        for (int i = 1; i < 65; i++)
+        for (int i = 1; i < 32; i++)
         {
             std::string Id("A");
             Id.append(std::to_string(i));
-            mimodule::ModuleChannel* c = output0.getChannel(Id);
+            mimodule::ModuleChannel* c = geconOut3.getChannel(Id);
+            mimodule::ModuleChannel* c2 = geconOut4.getChannel(Id);
             if(c != nullptr)
             {
                 blink >> c->value();
+                blink >> c2->value();
             }
         }
         blink = !blink;
+
+        mimodule::ModuleChannel* seven1 = sevenofnine.getChannel("Segment1");
+        mimodule::ModuleChannel* seven2 = sevenofnine.getChannel("Segment2");
+        mimodule::ModuleChannel* seven3 = sevenofnine.getChannel("Segment3");
+        mimodule::ModuleChannel* seven4 = sevenofnine.getChannel("Segment4");
+        mimodule::ModuleChannel* seven5 = sevenofnine.getChannel("Segment5");
+        mimodule::ModuleChannel* seven6 = sevenofnine.getChannel("Segment6");
+        mimodule::ModuleChannel* seven7 = sevenofnine.getChannel("Segment7");
+        mimodule::ModuleChannel* seven8 = sevenofnine.getChannel("Segment8");
+        
+        segVal >> seven1->value();
+        segVal >> seven2->value();
+        segVal >> seven3->value();
+        segVal >> seven4->value();
+        segVal >> seven5->value();
+        segVal >> seven6->value();
+        segVal >> seven7->value();
+        segVal >> seven8->value();
+        segVal++;
+        if (segVal > 9)
+        {
+            segVal = 0;
+        }
         ::sleep(1);
     }
     return 0;
