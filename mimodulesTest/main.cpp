@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <mi/mimodules/ModuleHoerterInput.h>
 #include <mi/mimodules/ModuleHoerterOutput.h>
-#include <mi/mimodules/ModuleMiPotentiometer.h>
+#include <mi/mimodules/ModuleMiPotentiometerADS115.h>
 #include <mi/mimodules/ModuleManager.h>
 #include <mi/mimodules/ModuleInterface.h>
 #include <mi/mimodules/ModulePointer.h>
@@ -126,20 +126,20 @@ int main()
 {
     bool blink = false;
     int segVal = 0;
-    mimodule::ModuleGecon32Input geconIn1("", 1, "geconIn1");
-    mimodule::ModuleGecon32Input geconIn2("", 2, "geconIn2");
-    mimodule::ModuleGecon32Output geconOut3("", 3, "geconOut3");
-    mimodule::ModuleGecon32Output geconOut4("", 4, "geconOut4");
-    mimodule::ModuleMiPhoneNumber phoneNumber(5, "phone", 27, 28);
+    mimodule::ModuleGecon32Input geconIn1("/dev/ttyUSB0", 1, "geconIn1");
+    mimodule::ModuleGecon32Input geconIn2("/dev/ttyUSB0", 2, "geconIn2");
+    mimodule::ModuleGecon32Output geconOut3("/dev/ttyUSB0", 3, "geconOut3");
+    mimodule::ModuleGecon32Output geconOut4("/dev/ttyUSB0", 4, "geconOut4");
+    mimodule::ModuleMiPhoneNumber phoneNumber(5, "phone", 17, 27);
     mimodule::ModuleMiRpiGpioConfiguration conf;
     std::vector<mimodule::ModuleMiRpiGpioConfiguration> confs;
     conf.Dir = mimodule::ModulChannelDirection::Input;
-    conf.Number = 27;
+    conf.Number = 23;
     conf.State = mimodule::ModuleMiRpiGpioState::Active;
     confs.push_back(conf);
     mimodule::ModuleMiRpiGpio phoneJack("PhoneJack", confs);
-    mimodule::ModuleMiSevenSegment sevenofnine("", "sevenofnine");
-    mimodule::ModuleMiPotentiometer ModulVolume(0x42, 3, "Volume");
+    mimodule::ModuleMiSevenSegment sevenofnine("/dev/spidev0.0", "sevenofnine");
+    mimodule::ModuleMiPotentiometerADS1115 ModulVolume(0x48, 3, "Volume");
 
 
     //setup phone nummer
@@ -148,7 +148,7 @@ int main()
     //setup gecon
     GeconEvents* _GeconEvents1 = new GeconEvents();
     GeconEvents2* _GeconEvents2 = new GeconEvents2();
-    for (int i = 1 ; i < 33 ; i++)
+    for (int i = 0 ; i < 32 ; i++)
     {
         std::string Id("E");
         Id.append(std::to_string(i));
@@ -163,15 +163,15 @@ int main()
 
     //setup phoneJack
     GPIOEvents* _GPIOEvents = new GPIOEvents();
-    ModulVolume.getChannel("GPIO27")->registerChannelEvent(_GPIOEvents);
+    phoneJack.getChannel("GPIO23")->registerChannelEvent(_GPIOEvents);
 
-    mimodule::ModuleManager man(20);
+    mimodule::ModuleManager man(10);
     man.addModule(&phoneNumber);
     man.addModule(&sevenofnine);
     man.addModule(&geconIn1);
     man.addModule(&geconIn2);
-    man.addModule(&geconOut3);
-    man.addModule(&geconOut4);
+    //man.addModule(&geconOut3);
+    //man.addModule(&geconOut4);
     man.addModule(&ModulVolume);
     man.addModule(&phoneJack);
     man.start();
@@ -180,7 +180,7 @@ int main()
 
     while (1)
     {
-        for (int i = 1; i < 32; i++)
+        /*for (int i = 1; i < 32; i++)
         {
             std::string Id("A");
             Id.append(std::to_string(i));
@@ -191,6 +191,17 @@ int main()
                 blink >> c->value();
                 blink >> c2->value();
             }
+        }*/
+        mimodule::ModuleChannel* c = geconOut3.getChannel("A31");
+        mimodule::ModuleChannel* c2 = geconOut4.getChannel("A31");
+        if ((c != nullptr) && (c2 != nullptr))
+        {
+            blink >> c->value();
+            blink >> c2->value();
+        }
+        else
+        {
+            printf("huch");
         }
         blink = !blink;
 

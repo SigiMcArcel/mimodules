@@ -24,6 +24,7 @@
     <ClInclude Include="ModuleMiPhoneNumber.h" />
     <ClInclude Include="ModuleMiSevenSegment.h" />
     <ClInclude Include="ModuleMiRpiGpio.h" />
+    <ClInclude Include="ModuleMiPotentiometerADS115.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleHoerterInput.cpp" />
@@ -41,6 +42,7 @@
     <ClCompile Include="ModuleMiPhoneNumber.cpp" />
     <ClCompile Include="ModuleMiSevenSegment.cpp" />
     <ClCompile Include="ModuleMiRpiGpio.cpp" />
+    <ClCompile Include="ModuleMiPotentiometerADS115.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="install.sh" />

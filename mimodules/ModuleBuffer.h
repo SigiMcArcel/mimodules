@@ -106,6 +106,7 @@ namespace mimodule
 		{
 			uint32_t byteVal = static_cast<uint32_t>(getValue<uint8_t>(offset));
 			uint32_t bitNumber = static_cast<uint32_t>((offset % 8));
+			
 			if (val)
 			{
 				byteVal = byteVal | (1 << bitNumber);
@@ -116,14 +117,13 @@ namespace mimodule
 			}
 			
 			setValue<uint8_t>((uint8_t)byteVal, offset);
-
 		}
 
 		bool operator!=(ModuleBuffer& obj)
 		{
 			for (uint16_t i = 0; i < _Size; i++)
 			{
-				if (getValue<uint8_t>(i) != obj.getValue<uint8_t>(i))
+				if (getValue<uint8_t>(i * 8) != obj.getValue<uint8_t>(i * 8))
 				{
 					return true;
 				}
