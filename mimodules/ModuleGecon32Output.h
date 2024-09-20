@@ -16,8 +16,9 @@ namespace mimodule
 		void setChannel(int pin, ModulValueType type, ModuleBitOffset offset, ModulChannelDirection dir)
 		{
 			std::string name("A");
+			name.append(std::to_string(_Address));
+			name.append(".");
 			name.append(std::to_string(pin));
-			printf("%s create output channel pin %d offset %d name %s\n", __func__, pin, offset,name.c_str());
 			_Channels.push_back(new ModuleChannel(name, type, offset, dir));
 		}
 
@@ -35,7 +36,7 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs();
+		virtual ModuleResult readInputs(bool init);
 		virtual ModuleResult writeOutputs();
 
 	public:
@@ -82,6 +83,10 @@ namespace mimodule
 		void A31(bool val);
 		void A32(bool val);
 
+		int getAddress()
+		{
+			return _Address;
+		}
 
 	};
 }

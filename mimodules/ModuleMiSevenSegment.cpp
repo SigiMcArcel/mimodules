@@ -68,7 +68,7 @@ mimodule::ModuleResult mimodule::ModuleMiSevenSegment::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiSevenSegment::readInputs()
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }
@@ -88,8 +88,9 @@ mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeOutputs()
             if (contains((*iterChannels)->id(), std::string("Segment")))
             {
                 int seg = getLastCharAsInt((*iterChannels)->id());
+               
                 u8Value << (*iterChannels)->value();
-                writeCmd(static_cast<ModuleMiSevenSegmentMaxCommand>((8 - seg)), u8Value);
+                writeCmd(static_cast<ModuleMiSevenSegmentMaxCommand>((9 - seg)), u8Value);
             }
             else
             {

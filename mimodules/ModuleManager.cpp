@@ -6,6 +6,7 @@ void mimodule::ModuleManager::start()
 	{
 		mod->init();
 		mod->open();
+		mod->readInputs(true);
 	}
 	_IOTimer.Start(_CycleTime,nullptr,10,miutils::Schedulers::Fifo);
 }
@@ -31,7 +32,7 @@ void mimodule::ModuleManager::eventOccured(void* sender, const std::string& name
 	{
 		for (mimodule::ModuleInterface* mod : _Modules)
 		{
-			mod->readInputs();
+			mod->readInputs(false);
 			mod->writeOutputs();
 		}
 	}

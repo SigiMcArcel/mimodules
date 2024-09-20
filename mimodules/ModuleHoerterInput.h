@@ -4,6 +4,7 @@
 #include <mi/midriver/I2CDriver.h>
 #include "ModuleBase.h"
 
+
 namespace mimodule
 {
 	class ModuleHoerterInput : public mimodule::ModuleBase
@@ -19,7 +20,7 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs();
+		virtual ModuleResult readInputs(bool init);
 		virtual ModuleResult writeOutputs();
 
 	public:

@@ -46,6 +46,7 @@
     <ClCompile Include="ModuleMidiOutput.cpp" />
     <ClCompile Include="ModuleMiPhoneNumber.cpp" />
     <ClCompile Include="ModuleMiPotentiometer.cpp" />
+    <ClCompile Include="ModuleMiPotentiometerMCP4725.cpp" />
     <ClCompile Include="ModuleMiPotentiometerADS115.cpp" />
     <ClCompile Include="ModuleMiRpiGpio.cpp" />
     <ClCompile Include="ModuleMiSevenSegment.cpp" />
@@ -66,6 +67,7 @@
     <ClInclude Include="ModuleMidiOutput.h" />
     <ClInclude Include="ModuleMiPhoneNumber.h" />
     <ClInclude Include="ModuleMiPotentiometer.h" />
+    <ClInclude Include="ModuleMiPotentiometerMCP4725.h" />
     <ClInclude Include="ModuleMiPotentiometerADS115.h" />
     <ClInclude Include="ModuleMiRpiGpio.h" />
     <ClInclude Include="ModuleMiSevenSegment.h" />

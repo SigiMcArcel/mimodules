@@ -39,7 +39,7 @@ mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputs()
+mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputs(bool init)
 {   
     if (_LastChoosedNumber != _ChoosedNumber)
     { 

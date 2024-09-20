@@ -1,28 +1,49 @@
 #include "ModuleMiPotentiometerADS115.h"
 #include <cmath>
 
-int16_t mimodule::ModuleMiPotentiometerADS1115::StartConversation()
+uint8_t  mimodule::ModuleMiPotentiometerADS1115::getGain(double gainAsVoltage )
 {
+    //search next bigger
+    for (int i = static_cast<int>(ADS1115Gains::GainMax) -1; i > -1; i--)
+    {
+        if (gainAsVoltage <= GainRanges[i])
+        {
+            return static_cast<uint8_t>(i);
+        }
+    }
+    return 0;
+}
+
+void mimodule::ModuleMiPotentiometerADS1115::getMaxDigits()
+{
+    _MaxDigits =  _ADS115MaxDigits / _VoltageRangeADC * _MaxAnalogVoltageInput;
+ 
+}
+
+int32_t mimodule::ModuleMiPotentiometerADS1115::getADCValue()
+{
+    ADS1115Config config;
     uint8_t wbuff[3] = { 0 };
     uint8_t rbuff[2] = { 0 };
-    // set config register and start conversion
-   // ANC1 and GND, 4.096v, 128s/s
+    int16_t val = 0;
 
-    wbuff[0] = 1;    // config register is 1
-    wbuff[1] = 0b11000101; // bit 15-8 0xD3
+    config.data[0] = 0;
+    config.data[1] = 0;
 
-    // bit 15 flag bit for single shot
-    // Bits 14-12 input selection:
-    // 100 ANC0; 101 ANC1; 110 ANC2; 111 ANC3
-    // Bits 11-9 Amp gain. Default to 010 here 001 P19
-    // Bit 8 Operational mode of the ADS1115.
-    // 0 : Continuous conversion mode
-    // 1 : Power-down single-shot mode (default)
+    config.Reg.COMP_QUE = 1;
+    config.Reg.COMP_LAT = 1;
+    config.Reg.COMP_POL = 0;
+    config.Reg.COMP_MODE = 0;
+    config.Reg.DR = (uint8_t)ADS1115DataRate::SPS128;
 
-    wbuff[2] = 0b10000101; // bits 7-0  0x85
+    config.Reg.MODE = (uint8_t)ADS1115ConversionMod::SingleShot;
+    config.Reg.PGA = (uint8_t)_Gain;
+    config.Reg.MUX = 0b100;
+    config.Reg.OS = 1;
 
-    // Bits 7-5 data rate default to 100 for 128SPS
-    // Bits 4-0  comparator functions see spec sheet.
+    wbuff[0] = 1;
+    wbuff[1] = config.data[1];
+    wbuff[2] = config.data[0];
 
     if (_I2CDriver.write(3, wbuff) != miDriver::DriverResults::Ok)
     {
@@ -54,72 +75,10 @@ int16_t mimodule::ModuleMiPotentiometerADS1115::StartConversation()
     }
 
     // convert display results
-    return rbuff[0] << 8 | rbuff[1];
-}
+    int16_t tmpLow = static_cast<int16_t>(rbuff[1]);
+    int16_t tmpHigh = static_cast<int16_t>(rbuff[0]);
 
-mimodule::ModuleResult mimodule::ModuleMiPotentiometerADS1115::init()
-{
-    return ModuleResult();
-}
-
-mimodule::ModuleResult mimodule::ModuleMiPotentiometerADS1115::deinit()
-{
-    return ModuleResult();
-}
-
-mimodule::ModuleResult mimodule::ModuleMiPotentiometerADS1115::open()
-{
-    if (_I2CDriver.open() != miDriver::DriverResults::Ok)
-    {
-        return ModuleResult::ErrorInit;
-    }
-    return ModuleResult::Ok;
-}
-
-mimodule::ModuleResult mimodule::ModuleMiPotentiometerADS1115::close()
-{
-    _I2CDriver.close();
-    return ModuleResult::Ok;
-}
-
-mimodule::ModuleResult mimodule::ModuleMiPotentiometerADS1115::readInputs()
-{
-    int16_t val = StartConversation();
-    _InputBuffer.setValue<int16_t>(val,0);
-    if (_LastInputBuffer != _InputBuffer)
-    {
-        std::vector<mimodule::ModuleChannel*>::iterator iter;
-        for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
-        {
-            int16_t val = _InputBuffer.getValue<int16_t>((*iter)->bitOffset());
-            int16_t valLast = _LastInputBuffer.getValue<int16_t>((*iter)->bitOffset());
-            int32_t val32 = (int32_t)val;
-            int32_t lastVal32 = (int32_t)valLast;
-            int32_t absVal = std::abs((lastVal32 - val32));
-
-
-            if (absVal > (int32_t)_Filter)
-            {
-                val >> (*iter)->value();
-                if ((*iter)->valueChangedEvent() != nullptr)
-                {
-                    (*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
-                }
-            }
-        }
-    }
-    _InputBuffer.cpyTo(_LastInputBuffer);
-
-
-    return ModuleResult::Ok;
-}
-
-mimodule::ModuleResult mimodule::ModuleMiPotentiometerADS1115::writeOutputs()
-{
-    return ModuleResult::Ok;
-}
-
-uint16_t mimodule::ModuleMiPotentiometerADS1115::value()
-{
-    return _InputBuffer.getValue<uint16_t>(0);
+    val = (tmpHigh << 8) | tmpLow;
+    
+    return val;
 }

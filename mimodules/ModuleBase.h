@@ -37,8 +37,6 @@ namespace mimodule
 		ModuleBuffer _LastOutputBuffer;
 		ChannelList _Channels;
 
-		
-		
 	public:
 		ModuleBase(ModuleByteSize inputSize, ModuleByteSize outputSize,const std::string& name)
 			:_Name(name)
@@ -63,7 +61,6 @@ namespace mimodule
 			, _LastInputBuffer(0)
 			, _OutputBuffer(0)
 			, _LastOutputBuffer(0)
-			
 		{
 			
 		};

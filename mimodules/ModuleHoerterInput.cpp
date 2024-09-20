@@ -27,7 +27,7 @@ mimodule::ModuleResult mimodule::ModuleHoerterInput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputs()
+mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputs(bool init)
 {
     if(_I2CDriver.read(1, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
@@ -41,7 +41,7 @@ mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputs()
         {
             bool val = _InputBuffer.getBoolean((*iter)->bitOffset());
             bool valLast = _LastInputBuffer.getBoolean((*iter)->bitOffset());
-            if (val != valLast)
+            if ((val != valLast) || init)
             {
                 val >> (*iter)->value();
                 if ((*iter)->valueChangedEvent() != nullptr)

@@ -27,7 +27,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs()
+mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs(bool init)
 {
     if(_ModbusDriver->readInputBits(_Address,32,miDriver::ModbusDriverAccessType_e::BITS, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
@@ -42,7 +42,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs()
         {
             bool val = _InputBuffer.getBoolean((*iter)->bitOffset());
             bool valLast = _LastInputBuffer.getBoolean((*iter)->bitOffset());
-            if (val != valLast)
+            if ((val != valLast) || init)
             {
                 val >> (*iter)->value();
                 if ((*iter)->valueChangedEvent() != nullptr)

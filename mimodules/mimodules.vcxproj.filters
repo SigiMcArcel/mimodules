@@ -16,7 +16,7 @@
     <ClInclude Include="ModuleHoerterOutput.h" />
     <ClInclude Include="ModuleValue.h" />
     <ClInclude Include="ModulePointer.h" />
-    <ClInclude Include="ModuleMiPotentiometer.h" />
+    <ClInclude Include="ModuleMiPotentiometerMCP4725.h" />
     <ClInclude Include="ModuleMidiOutput.h" />
     <ClInclude Include="ModuleMidiInput.h" />
     <ClInclude Include="ModuleGecon32Input.h" />
@@ -25,6 +25,7 @@
     <ClInclude Include="ModuleMiSevenSegment.h" />
     <ClInclude Include="ModuleMiRpiGpio.h" />
     <ClInclude Include="ModuleMiPotentiometerADS115.h" />
+    <ClInclude Include="ModuleMiPotentiometer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleHoerterInput.cpp" />
@@ -34,7 +35,7 @@
     <ClCompile Include="ModuleHoerterOutput.cpp" />
     <ClCompile Include="ModuleValue.cpp" />
     <ClCompile Include="ModulePointer.cpp" />
-    <ClCompile Include="ModuleMiPotentiometer.cpp" />
+    <ClCompile Include="ModuleMiPotentiometerMCP4725.cpp" />
     <ClCompile Include="ModuleMidiOutput.cpp" />
     <ClCompile Include="ModuleMidiInput.cpp" />
     <ClCompile Include="ModuleGecon32Input.cpp" />
@@ -43,6 +44,7 @@
     <ClCompile Include="ModuleMiSevenSegment.cpp" />
     <ClCompile Include="ModuleMiRpiGpio.cpp" />
     <ClCompile Include="ModuleMiPotentiometerADS115.cpp" />
+    <ClCompile Include="ModuleMiPotentiometer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="install.sh" />

@@ -26,7 +26,7 @@ mimodule::ModuleResult mimodule::ModuleHoerterOutput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterOutput::readInputs()
+mimodule::ModuleResult mimodule::ModuleHoerterOutput::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }

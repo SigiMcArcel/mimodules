@@ -41,11 +41,11 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs();
+		virtual ModuleResult readInputs(bool init);
 		virtual ModuleResult writeOutputs();
 
 	public:
-		ModuleMiRpiGpio(const std::string& name, std::vector<ModuleMiRpiGpioConfiguration>& condiguration)
+		ModuleMiRpiGpio(const std::string& name, const std::vector<ModuleMiRpiGpioConfiguration>& condiguration)
 			:ModuleBase(2, 0, name)
 			, _GPIODriver()
 			, _Configuration(condiguration)

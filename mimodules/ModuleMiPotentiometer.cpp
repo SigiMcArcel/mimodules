@@ -1,7 +1,9 @@
 #include "ModuleMiPotentiometer.h"
 #include <cmath>
+
 mimodule::ModuleResult mimodule::ModuleMiPotentiometer::init()
 {
+   getMaxDigits();
     return ModuleResult();
 }
 
@@ -25,37 +27,24 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs()
+mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
 {
-    if (_I2CDriver.read(2, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
-    {
-        _InputBuffer.cpyTo(_LastInputBuffer);
-        return ModuleResult::ErrorRead;
-    }
-    if (_LastInputBuffer != _InputBuffer)
+	double dval = getADCValue();
+    double percent = 100.0 / _MaxDigits * dval;
+    double diff = fabs(percent - _LastPercent);
+    if(((_LastPercent != percent) || init) && (diff > _Filter))
     {
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
         {
-            uint16_t val = _InputBuffer.getValue<uint16_t>((*iter)->bitOffset());
-            uint16_t valLast = _LastInputBuffer.getValue<uint16_t>((*iter)->bitOffset());
-            int32_t val32 = (int32_t)val;
-            int32_t lastVal32 = (int32_t)valLast;
-            int32_t absVal = std::abs((lastVal32 - val32));
-
-
-            if (absVal > (int32_t)_Filter)
+            percent >> (*iter)->value();
+            if ((*iter)->valueChangedEvent() != nullptr)
             {
-                val >> (*iter)->value();
-                if ((*iter)->valueChangedEvent() != nullptr)
-                {
-                    (*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
-                }
+                (*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
             }
         }
     }
-    _InputBuffer.cpyTo(_LastInputBuffer);
-
+    _LastPercent = percent;
 
     return ModuleResult::Ok;
 }

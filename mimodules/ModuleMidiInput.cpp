@@ -33,7 +33,7 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiInput::readInputs()
+mimodule::ModuleResult mimodule::ModuleMidiInput::readInputs(bool init)
 {
     miDriver::MidiMessage message;
     if (_Midi == nullptr)

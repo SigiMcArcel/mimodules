@@ -20,7 +20,7 @@ namespace mimodule
 		virtual mimodule::ModuleResult deinit() = 0;
 		virtual mimodule::ModuleResult open() = 0;
 		virtual mimodule::ModuleResult close() = 0;
-		virtual mimodule::ModuleResult readInputs() = 0;
+		virtual mimodule::ModuleResult readInputs(bool init) = 0;
 		virtual mimodule::ModuleResult writeOutputs() = 0;
 	};
 

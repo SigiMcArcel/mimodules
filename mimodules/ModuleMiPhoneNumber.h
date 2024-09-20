@@ -29,7 +29,7 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs();
+		virtual ModuleResult readInputs(bool init);
 		virtual ModuleResult writeOutputs();
 	public:
 		ModuleMiPhoneNumber( int cycletime,const std::string& name,int pinStart,int pinPulse)

@@ -27,7 +27,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Output::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Output::readInputs()
+mimodule::ModuleResult mimodule::ModuleGecon32Output::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }

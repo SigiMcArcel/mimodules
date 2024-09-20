@@ -30,9 +30,9 @@ public:
     // Geerbt über ModuleValueChangedEvent
     virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override
     {
-        bool val = false;
+        double val = 0;
         val << value;
-        printf(" VolumeEvents ValueChanged % s value = %d\n", id.c_str(), val);
+        printf(" VolumeEvents ValueChanged % s value = %f\n", id.c_str(), val);
     }
 
 };
@@ -134,12 +134,12 @@ int main()
     mimodule::ModuleMiRpiGpioConfiguration conf;
     std::vector<mimodule::ModuleMiRpiGpioConfiguration> confs;
     conf.Dir = mimodule::ModulChannelDirection::Input;
-    conf.Number = 23;
+    conf.Number = 5;
     conf.State = mimodule::ModuleMiRpiGpioState::Active;
     confs.push_back(conf);
     mimodule::ModuleMiRpiGpio phoneJack("PhoneJack", confs);
     mimodule::ModuleMiSevenSegment sevenofnine("/dev/spidev0.0", "sevenofnine");
-    mimodule::ModuleMiPotentiometerADS1115 ModulVolume(0x48, 3, "Volume");
+    mimodule::ModuleMiPotentiometerADS1115 ModulVolume(0x48, 0.1, "Volume");
 
 
     //setup phone nummer
@@ -163,17 +163,18 @@ int main()
 
     //setup phoneJack
     GPIOEvents* _GPIOEvents = new GPIOEvents();
-    phoneJack.getChannel("GPIO23")->registerChannelEvent(_GPIOEvents);
+    phoneJack.getChannel("GPIO5")->registerChannelEvent(_GPIOEvents);
 
     mimodule::ModuleManager man(10);
     man.addModule(&phoneNumber);
     man.addModule(&sevenofnine);
     man.addModule(&geconIn1);
     man.addModule(&geconIn2);
-    //man.addModule(&geconOut3);
-    //man.addModule(&geconOut4);
+    man.addModule(&geconOut3);
+    man.addModule(&geconOut4);
     man.addModule(&ModulVolume);
     man.addModule(&phoneJack);
+    man.addModule(&ModulVolume);
     man.start();
 
 

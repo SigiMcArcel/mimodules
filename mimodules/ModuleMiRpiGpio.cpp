@@ -115,7 +115,7 @@ void mimodule::ModuleMiRpiGpio::configure(std::vector<ModuleMiRpiGpioConfigurati
 				}
 				else
 				{
-					printf("%s GPIO is used or alternate\n", __func__);
+					printf("%s GPIO%d is used or alternate\n", __func__, defaultConf->Number);
 				}
 			}
 		}
@@ -155,7 +155,7 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::close()
 	return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs()
+mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs(bool init)
 {
 	miDriver::DriverResults results = miDriver::DriverResults::Ok;
 	std::vector<mimodule::ModuleChannel*>::iterator iter;
@@ -171,7 +171,7 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs()
 				bool valLast = false;
 				valLast << (*iter)->value();
 				val = _GPIODriver.GpioRead(conf->Number,&results);
-				if (valLast != val)
+				if ((valLast != val) || init)
 				{
 					val >> (*iter)->value();
 					if ((*iter)->valueChangedEvent() != nullptr)
