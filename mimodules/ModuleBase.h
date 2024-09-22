@@ -77,6 +77,11 @@ namespace mimodule
 		ModuleChannel* getChannel(std::string id)
 		{
 			ChannelList::iterator iter;
+			if (_Channels.empty())
+			{
+				printf("Module %s: error no Channels");
+				return nullptr;
+			}
 			for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
 			{
 				if ((*iter)->id() == id)

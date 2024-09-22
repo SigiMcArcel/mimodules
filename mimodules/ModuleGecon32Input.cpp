@@ -29,6 +29,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::close()
 
 mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs(bool init)
 {
+    
     if(_ModbusDriver->readInputBits(_Address,32,miDriver::ModbusDriverAccessType_e::BITS, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
         _InputBuffer.cpyTo(_LastInputBuffer);
