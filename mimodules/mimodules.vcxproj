@@ -136,7 +136,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <RemotePostBuildEvent>
-      <Command>cp $(RemoteDebuggerCommand) /usr/lib </Command>
+      <Command>cp ~/projects/mimodules/bin/ARM64/Debug//libmimodules.so /usr/lib </Command>
     </RemotePostBuildEvent>
     <Link>
       <LibraryDependencies>pthread;midriver;miutils;asound</LibraryDependencies>
