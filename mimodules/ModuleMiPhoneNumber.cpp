@@ -41,10 +41,10 @@ mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::close()
 
 mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputs(bool init)
 {   
-    if (_LastChoosedNumber != _ChoosedNumber)
+    if (_ChoosedNumberChanged)
     { 
         std::vector<mimodule::ModuleChannel*>::iterator iter;
-
+        _ChoosedNumberChanged = false;
         iter = _Channels.begin();
         _ChoosedNumber >> (*iter)->value();
         if ((*iter)->valueChangedEvent() != nullptr)
@@ -53,7 +53,6 @@ mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputs(bool init)
         }
 
     }
-    _LastChoosedNumber = _ChoosedNumber;
     return ModuleResult::Ok;
 }
 
@@ -87,6 +86,7 @@ void mimodule::ModuleMiPhoneNumber::eventOccured(void* sender, const std::string
             if (_RflagStart)
             {
                 _RflagStart = 0;
+                _ChoosedNumberChanged = true;
                 if (_FlagCount == 10)
                 {
                     _ChoosedNumber = 0;
@@ -95,11 +95,7 @@ void mimodule::ModuleMiPhoneNumber::eventOccured(void* sender, const std::string
                 {
                     _ChoosedNumber = _FlagCount;
                 }
-
-                printf("ChoosedNumber %d\n", _ChoosedNumber);
-               
             }
-
         }
         _LastStart = stateStart;
         if (statePulse && _LastPulse)
@@ -120,5 +116,4 @@ void mimodule::ModuleMiPhoneNumber::eventOccured(void* sender, const std::string
         }
         _LastPulse = statePulse;
     }
-
 }

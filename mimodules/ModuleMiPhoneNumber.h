@@ -15,7 +15,7 @@ namespace mimodule
 		miutils::Timer _Timer;
 		std::vector<ModuleValueChangedEvent*> _Events;
 		int _ChoosedNumber;
-		int _LastChoosedNumber;
+		bool _ChoosedNumberChanged;
 		int _GpioPinStart;
 		int _GpioPinPulse;
 		int _LastPulse;
@@ -38,15 +38,15 @@ namespace mimodule
 			, _CycleTime(cycletime)
 			, _Timer("phone",this)
 			, _Events()
-			,_ChoosedNumber(0)
-			, _LastChoosedNumber(0)
-			,_GpioPinStart(pinStart)
-			,_GpioPinPulse(pinPulse)
-			,_LastPulse(0)
-			,_LastStart(0)
-			,_FlagCount(0)
-			,_RflagStart(0)
-			,_RflagPulse(0)
+			, _ChoosedNumber(0)
+			, _ChoosedNumberChanged(false)
+			, _GpioPinStart(pinStart)
+			, _GpioPinPulse(pinPulse)
+			, _LastPulse(0)
+			, _LastStart(0)
+			, _FlagCount(0)
+			, _RflagStart(0)
+			, _RflagPulse(0)
 		{
 			_Channels.push_back(new ModuleChannel("PhoneNumber", ModulValueType::Uint8, 0, ModulChannelDirection::Input));
 		}
