@@ -18,38 +18,34 @@ mimodule::ModuleResult mimodule::ModuleGecon32Output::open()
     {
         return ModuleResult::ErrorInit;
     }
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleGecon32Output::close()
 {
+    ModuleBase::close();
     _ModbusDriver->close();
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Output::readInputs(bool init)
+void mimodule::ModuleGecon32Output::ValueChanged(mimodule::ModuleValue& value, const std::string& id)
+{
+    bool val = false;
+    val = value.getValue<bool>();
+    _OutputBuffer.setBoolean(val, getChannel(id)->bitOffset());
+}
+
+mimodule::ModuleResult mimodule::ModuleGecon32Output::readInputsPrivate(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Output::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleGecon32Output::writeOutputsPrivate()
 {
-    ChannelList::iterator iterChannels;
-    for (iterChannels = _Channels.begin(); iterChannels < _Channels.end(); ++iterChannels)
-    {
-        if ((*iterChannels)->value().changed())
-        {
-            bool val = false;
-            val << (*iterChannels)->value();
-  
-            _OutputBuffer.setBoolean(val, (*iterChannels)->bitOffset());
- 
-        }
-    }
-
     if (_OutputBuffer != _LastOutputBuffer)
     {
-        if (_ModbusDriver->writeBits(_Address, miDriver::ModbusDriverAccessType_e::BITS,32,_OutputBuffer.buffer()) != miDriver::DriverResults::Ok)
+        if (_ModbusDriver->writeBits(_Address, miDriver::ModbusDriverAccessType_e::BITS, 32, _OutputBuffer.buffer()) != miDriver::DriverResults::Ok)
         {
             printf("writeOutputs  error %s\n", _Name.c_str());
 

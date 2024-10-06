@@ -20,11 +20,13 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::open()
     {
         return ModuleResult::ErrorInit;
     }
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleMidiInput::close()
 {
+    ModuleBase::close();
     if (_Midi == nullptr)
     {
         return ModuleResult::ErrorInvalidBuffer;
@@ -33,7 +35,7 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiInput::readInputs(bool init)
+mimodule::ModuleResult mimodule::ModuleMidiInput::readInputsPrivate(bool init)
 {
     miDriver::MidiMessage message;
     if (_Midi == nullptr)
@@ -50,12 +52,12 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::readInputs(bool init)
                 {
                     //_Channels[message.U.Message.Key].
                     bool val = true;
-                    val >> _Channels[message.U.Message.Key]->value();
+                    _Channels[message.U.Message.Key]->value().setValue(val);
                 }
                 else
                 {
                     bool val = false;
-                    val >> _Channels[message.U.Message.Key]->value();
+                    _Channels[message.U.Message.Key]->value().setValue(val);
                 }
                 if (_Channels[message.U.Message.Key]->valueChangedEvent())
                 {
@@ -69,7 +71,7 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::readInputs(bool init)
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiInput::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleMidiInput::writeOutputsPrivate()
 {
     return ModuleResult::Ok;
 }

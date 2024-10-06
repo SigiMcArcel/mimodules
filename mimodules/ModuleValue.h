@@ -2,8 +2,8 @@
 
 #include <string>
 #include <stdint.h>
-#include "ModulePointer.h"
-
+#include <memory>
+#include "ModuleInterface.h"
 
 namespace mimodule
 {
@@ -22,19 +22,41 @@ namespace mimodule
 		Double
 	};
 
-	
-	
 	class ModuleValue
 	{
+		typedef std::shared_ptr<uint8_t[]> BufferData;
 	private:
-		ModulePointer _Buffer;
+		BufferData  _Buffer;
 		ModulValueType _Type;
-		bool _Changed;
+		mimodule::ModuleValueChangedEvent* _Event;
+		std::string _ChannelName;
+		bool _CheckChanges;
 
 	public:
+		ModuleValueChangedEvent* getEvent()
+		{
+			return _Event;
+		}
+
+		std::string& getChannelName()
+		{
+			return _ChannelName;
+		}
+
 		ModulValueType getType()
 		{
 			return _Type;
+		}
+
+		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent, bool checkChanges)
+		{
+			_CheckChanges = checkChanges;
+			if (valueChangedEvent != nullptr)
+			{
+				_Event = valueChangedEvent;
+				return true;
+			}
+			return false;
 		}
 
 		int32_t getSizeFromType(ModulValueType type)
@@ -68,205 +90,77 @@ namespace mimodule
 			return -1;
 		}
 
-
 		ModuleValue()
 			:_Buffer()
 			, _Type(ModulValueType::Boolean)
-			, _Changed(false)
+			, _Event(nullptr)
+			, _ChannelName("")
+			, _CheckChanges(false)
 		{
 
 		}
 
 		ModuleValue(ModulValueType type)
-			:_Buffer(getSizeFromType(type),  "")
+			: _Buffer(new uint8_t[getSizeFromType(type)], std::default_delete<uint8_t[]>())
 			, _Type(type)
-			, _Changed(false)
+			, _Event(nullptr)
+			, _ChannelName("")
+			, _CheckChanges(false)
 		{
 
+		}
+
+		ModuleValue(ModulValueType type,const std::string& channelName)
+			:_Buffer(new uint8_t[getSizeFromType(type)], std::default_delete<uint8_t[]>())
+			, _Type(type)
+			, _Event(nullptr)
+			, _ChannelName(channelName)
+			, _CheckChanges(false)
+		{
+			
 		}
 
 		ModuleValue(const ModuleValue& other)
 			: _Buffer(other._Buffer)
 			, _Type(other._Type)
-			, _Changed(other._Changed)
-		{
+			, _Event(other._Event)
+			, _ChannelName(other._ChannelName)
+			, _CheckChanges(other._CheckChanges)
 
+		{
+			
 		}
 
-		~ModuleValue()
+		template<typename T>
+		void setValue(T& value)
 		{
-
-		}
-
-
-		const bool changed() const
-		{
-			return _Changed;
-		}
-		friend bool& operator<<(bool& value, ModuleValue& moduleValue)
-		{
-
-			value = *((bool*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-
-		friend bool& operator>>(bool& value, ModuleValue& moduleValue)
-		{
-			bool tmp = *((uint8_t*)(moduleValue._Buffer.pointer()));
-			if (tmp != value)
+			T lastValue = *reinterpret_cast<T*>(_Buffer.get());
+			*reinterpret_cast<T*>(_Buffer.get()) = value;
+			if (_CheckChanges)
 			{
-				*((bool*)(moduleValue._Buffer.pointer())) = value;
-
-				moduleValue._Changed = true;
+				if (lastValue != value)
+				{
+					if (_Event != nullptr)
+					{
+						_Event->ValueChanged(*this, _ChannelName);
+					}
+				}
 			}
-			
-			return value;
+			else
+			{
+				if (_Event != nullptr)
+				{
+					_Event->ValueChanged(*this, _ChannelName);
+				}
+			}
 		}
 
-		friend uint8_t& operator<<(uint8_t& value, ModuleValue& moduleValue)
+		template<typename T>
+		T getValue()
 		{
-			value = *((uint8_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
+			T value = *reinterpret_cast<T*>(_Buffer.get()); 
 			return value;
 		}
-
-		friend uint8_t& operator>>(uint8_t& value, ModuleValue& moduleValue)
-		{
-			*((uint8_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend uint16_t& operator<<(uint16_t& value, ModuleValue& moduleValue)
-		{
-			value = *((uint16_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend uint16_t& operator>>(uint16_t& value, ModuleValue& moduleValue)
-		{
-			*((uint16_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend uint32_t& operator<<(uint32_t& value, ModuleValue& moduleValue)
-		{
-			value = *((uint32_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend uint32_t& operator>>(uint32_t& value, ModuleValue& moduleValue)
-		{
-			*((uint32_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend uint64_t& operator<<(uint64_t& value, ModuleValue& moduleValue)
-		{
-			value = *((uint64_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend uint64_t& operator>>(uint64_t& value, ModuleValue& moduleValue)
-		{
-			*((uint64_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend int8_t& operator<<(int8_t& value, ModuleValue& moduleValue)
-		{
-			value = *((int8_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend int8_t& operator>>(int8_t& value, ModuleValue& moduleValue)
-		{
-			*((int8_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend int16_t& operator<<(int16_t& value, ModuleValue& moduleValue)
-		{
-			value = *((int16_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend int16_t& operator>>(int16_t& value, ModuleValue& moduleValue)
-		{
-			*((int16_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend int32_t& operator<<(int32_t& value, ModuleValue& moduleValue)
-		{
-			value = *((int32_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend int32_t& operator>>(int32_t& value, ModuleValue& moduleValue)
-		{
-			*((int32_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-		
-		friend int64_t& operator<<(int64_t& value, ModuleValue& moduleValue)
-		{
-			value = *((int64_t*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend int64_t& operator>>(int64_t& value, ModuleValue& moduleValue)
-		{
-			*((int64_t*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend float& operator<<(float& value, ModuleValue& moduleValue)
-		{
-			value = *((float*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend float& operator>>(float& value, ModuleValue& moduleValue)
-		{
-			*((float*)(moduleValue._Buffer.pointer())) = value;
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		friend double& operator<<(double& value, ModuleValue& moduleValue)
-		{
-			value = *((double*)(moduleValue._Buffer.pointer()));
-			moduleValue._Changed = false;
-			return value;
-		}
-
-		friend double& operator>>(double& value, ModuleValue& moduleValue)
-		{
-			*((double*)(moduleValue._Buffer.pointer())) = value;
-			
-			moduleValue._Changed = true;
-			return value;
-		}
-
-		
 	};
 }
 

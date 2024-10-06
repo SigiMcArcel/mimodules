@@ -6,13 +6,10 @@
 namespace mimodule
 { 
 	class ModuleMiPhoneNumber :
-		public mimodule::ModuleBase,
-		public miutils::EventListener
+		public mimodule::ModuleBase
 	{
 	private:
 		miDriver::GPIODriver _GPIODriver;
-		int _CycleTime;
-		miutils::Timer _Timer;
 		std::vector<ModuleValueChangedEvent*> _Events;
 		int _ChoosedNumber;
 		bool _ChoosedNumberChanged;
@@ -29,14 +26,12 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs(bool init);
-		virtual ModuleResult writeOutputs();
+		virtual ModuleResult readInputsPrivate(bool init) override;
+		virtual ModuleResult writeOutputsPrivate() override;
 	public:
-		ModuleMiPhoneNumber( int cycletime,const std::string& name,int pinStart,int pinPulse)
-			:ModuleBase(2, 0, name)
+		ModuleMiPhoneNumber( int cycleTime,const std::string& name,int pinStart,int pinPulse, mimodule::ModuleIOSyncMode syncMode)
+			:ModuleBase(name, 2, 0, syncMode, cycleTime)
 			, _GPIODriver()
-			, _CycleTime(cycletime)
-			, _Timer("phone",this)
 			, _Events()
 			, _ChoosedNumber(0)
 			, _ChoosedNumberChanged(false)

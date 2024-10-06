@@ -1,17 +1,15 @@
 #pragma once
 #include <string>
 #include "ModuleTypes.h"
-#include "ModuleValue.h"
 
 namespace mimodule
 {
-	
+	class ModuleValue;
 	class ModuleValueChangedEvent
 	{
 	public:
 		virtual void ValueChanged(mimodule::ModuleValue& value,const std::string& id) = 0;
 	};
-
 
 	class ModuleInterface
 	{
@@ -23,7 +21,6 @@ namespace mimodule
 		virtual mimodule::ModuleResult readInputs(bool init) = 0;
 		virtual mimodule::ModuleResult writeOutputs() = 0;
 	};
-
 }
 
 

@@ -35,15 +35,14 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs(bool init);
-		virtual ModuleResult writeOutputs();
+		virtual ModuleResult readInputsPrivate(bool init);
+		virtual ModuleResult writeOutputsPrivate();
 
 	public:
-		ModuleGecon32Input(const std::string& device,int address, const std::string& name)
-			:ModuleBase(4,0,name )
+		ModuleGecon32Input(const std::string& device,int address,const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
+			:ModuleBase(name,4, 0, syncMode,cycleTime)
 			, _Device(device)
 			, _Address(address)
-			
 		{
 			_ModbusDriver =  miDriver::ModbusDriver::GetInstance(_Device);
 			setupChannels(32);

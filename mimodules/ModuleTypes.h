@@ -23,4 +23,13 @@ namespace mimodule
 		ErrorInvalidBuffer,
 		ErrorBufferRangeExceeded
 	};
+
+	typedef enum class ModuleIOSyncMode_e
+	{
+		SyncModeNone, //read and write will not called
+		SyncModeManager, //Managers timer calls read write
+		SyncModeModuleFree, //The module has his own timer, and call it as soon as possible
+		SyncModeModuleCyclic //The modul has his own timer and call it cylic
+	}ModuleIOSyncMode;
+
 }

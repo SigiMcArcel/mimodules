@@ -6,6 +6,7 @@
 #include <map>
 #include <typeinfo>
 #include <memory>
+#include <mi/miutils/Timer.h>
 #include "ModuleBuffer.h"
 #include "ModuleChannel.h"
 #include "ModuleInterface.h"
@@ -21,11 +22,11 @@
 namespace mimodule
 {
 	typedef std::vector<ModuleChannel*> ChannelList;
-	class ModuleBase : public ModuleInterface
+	class ModuleBase 
+	: public ModuleInterface
+	, public miutils::EventListener
 	{
 		friend class ModuleManager;
-
-
 	protected:
 		std::string _Name;
 		ModuleResult _State;
@@ -36,9 +37,15 @@ namespace mimodule
 		ModuleBuffer _OutputBuffer;
 		ModuleBuffer _LastOutputBuffer;
 		ChannelList _Channels;
+		miutils::Timer _Timer;
+		mimodule::ModuleIOSyncMode _SyncMode;
+		int _CycleTime;
+
+		virtual mimodule::ModuleResult readInputsPrivate(bool init);
+		virtual mimodule::ModuleResult writeOutputsPrivate();
 
 	public:
-		ModuleBase(ModuleByteSize inputSize, ModuleByteSize outputSize,const std::string& name)
+		ModuleBase(const std::string& name,ModuleByteSize inputSize, ModuleByteSize outputSize)
 			:_Name(name)
 			,_State(ModuleResult::Ok)
 			,_MaxInputBitSize(inputSize)
@@ -47,9 +54,27 @@ namespace mimodule
 			, _LastInputBuffer(inputSize)
 			, _OutputBuffer(outputSize)
 			, _LastOutputBuffer(outputSize)
-
+			, _Timer("IO",this)
+			, _SyncMode(mimodule::ModuleIOSyncMode::SyncModeManager)
+			, _CycleTime(0)
 		{
 			
+		};
+
+		ModuleBase(const std::string& name,ModuleByteSize inputSize, ModuleByteSize outputSize,mimodule::ModuleIOSyncMode syncMode,int cycleTime)
+			:_Name(name)
+			, _State(ModuleResult::Ok)
+			, _MaxInputBitSize(inputSize)
+			, _MaxOutputBitSize(outputSize)
+			, _InputBuffer(inputSize)
+			, _LastInputBuffer(inputSize)
+			, _OutputBuffer(outputSize)
+			, _LastOutputBuffer(outputSize)
+			, _Timer("IO", this)
+			, _SyncMode(syncMode)
+			, _CycleTime(cycleTime)
+		{
+
 		};
 
 		ModuleBase()
@@ -61,36 +86,28 @@ namespace mimodule
 			, _LastInputBuffer(0)
 			, _OutputBuffer(0)
 			, _LastOutputBuffer(0)
+			, _Timer("IO", this)
+			, _SyncMode(mimodule::ModuleIOSyncMode::SyncModeManager)
 		{
 			
 		};
 
 		~ModuleBase() = default;
-		const ModuleResult state() const
-		{
-			return _State;
-		}
+		const ModuleResult state() const;
+		ModuleChannel* getChannel(std::string id);
+		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent, bool checkChanges, const std::string& id);
+
+		virtual mimodule::ModuleResult open();
+		virtual mimodule::ModuleResult close();
+		virtual mimodule::ModuleResult readInputs(bool init);
+		virtual mimodule::ModuleResult writeOutputs();
+		
+		// Geerbt über EventListener
+		virtual void eventOccured(void* sender, const std::string& name) override;
 
 		
-		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent, const std::string& id);
-
-		ModuleChannel* getChannel(std::string id)
-		{
-			ChannelList::iterator iter;
-			if (_Channels.empty())
-			{
-				printf("Module %s: error no Channels");
-				return nullptr;
-			}
-			for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
-			{
-				if ((*iter)->id() == id)
-				{
-					return (*iter);
-				}
-			}
-			return nullptr;
-		}
 	};
+
+	
 }
 

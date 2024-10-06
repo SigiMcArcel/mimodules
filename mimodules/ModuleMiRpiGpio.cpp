@@ -147,15 +147,37 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::deinit()
 
 mimodule::ModuleResult mimodule::ModuleMiRpiGpio::open()
 {
+	ModuleBase::open();
 	return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleMiRpiGpio::close()
 {
+	ModuleBase::close();
 	return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs(bool init)
+void mimodule::ModuleMiRpiGpio::ValueChanged(mimodule::ModuleValue& value, const std::string& id)
+{
+	ModuleChannel* channel = getChannel(id);
+	if (channel == nullptr)
+	{
+		return;
+	}
+
+	ModuleMiRpiGpioConfiguration* conf = reinterpret_cast<ModuleMiRpiGpioConfiguration*>(channel->parameter());
+	if (conf != nullptr)
+	{
+		if (conf->State == ModuleMiRpiGpioState::Active && conf->Dir == ModulChannelDirection::Output)
+		{
+			bool val = false;
+			val = value.getValue<bool>();
+			_GPIODriver.GpioWrite(conf->Number, val);
+		}
+	}
+}
+
+mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputsPrivate(bool init)
 {
 	miDriver::DriverResults results = miDriver::DriverResults::Ok;
 	std::vector<mimodule::ModuleChannel*>::iterator iter;
@@ -168,48 +190,15 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs(bool init)
 			if (conf->State == ModuleMiRpiGpioState::Active && conf->Dir == ModulChannelDirection::Input)
 			{
 				bool val = false;
-				bool valLast = false;
-				valLast << (*iter)->value();
 				val = _GPIODriver.GpioRead(conf->Number,&results);
-				if ((valLast != val) || init)
-				{
-					val >> (*iter)->value();
-					if ((*iter)->valueChangedEvent() != nullptr)
-					{
-						(*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
-					}
-				}
+				(*iter)->value().setValue<bool>(val);
 			}
 		}
 	}
 	return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiRpiGpio::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleMiRpiGpio::writeOutputsPrivate()
 {
-	miDriver::DriverResults results = miDriver::DriverResults::Ok;
-	std::vector<mimodule::ModuleChannel*>::iterator iter;
-
-	for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
-	{
-		if ((*iter)->value().changed())
-		{
-			ModuleMiRpiGpioConfiguration* conf = reinterpret_cast<ModuleMiRpiGpioConfiguration*>((*iter)->parameter());
-			if (conf != nullptr)
-			{
-				if (conf->State == ModuleMiRpiGpioState::Active && conf->Dir == ModulChannelDirection::Output)
-				{
-					bool val = false;
-					val << (*iter)->value();
-					results = _GPIODriver.GpioWrite(conf->Number,val);
-					if (results != miDriver::DriverResults::Ok)
-					{
-						return ModuleResult::ErrorWrite;
-
-					}
-				}
-			}
-		}
-	}
 	return ModuleResult::Ok;
 }

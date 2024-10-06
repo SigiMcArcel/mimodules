@@ -2,23 +2,26 @@
 #include <cmath>
 #include <mi/midriver/DriverBase.h>
 
-bool contains(const std::string& str, const std::string& substr) {
-    return str.find(substr) != std::string::npos;
-}
-int getLastCharAsInt(const std::string& str) {
-    if (!str.empty()) {
-        // Hole das letzte Zeichen und konvertiere es in einen int (ASCII-Wert)
-        return std::stoi(str.substr(str.size() - 1));
-    }
-    return -1;
-}
-
-
-mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeCmd(mimodule::ModuleMiSevenSegmentMaxCommand command, unsigned char data)
+namespace
 {
-    unsigned char cmd[2] = { 0 };
+    bool contains(const std::string& str, const std::string& substr) {
+        return str.find(substr) != std::string::npos;
+    }
+
+    uint8_t getLastCharAsInt8(const std::string& str) {
+        if (!str.empty()) {
+            // Hole das letzte Zeichen und konvertiere es in einen int (ASCII-Wert)
+            return static_cast<uint8_t>(std::stoi(str.substr(str.size() - 1)));
+        }
+        return 0xff;
+    }
+}
+
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeCmd(uint8_t command, uint8_t data)
+{
+    uint8_t cmd[2] = { 0 };
     miDriver::DriverResults result = miDriver::DriverResults::Ok;
-    cmd[0] = static_cast<unsigned char>(command);
+    cmd[0] = command;
     cmd[1] = data;
     result = _SPIDriver.transfer(0, 2, cmd, cmd);
     if (result != miDriver::DriverResults::Ok)
@@ -28,11 +31,16 @@ mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeCmd(mimodule::Module
     return ModuleResult();
 }
 
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeCmd(mimodule::ModuleMiSevenSegmentMaxCommand command, uint8_t data)
+{
+    return writeCmd(static_cast<uint8_t>(command), data);
+}
+
 void mimodule::ModuleMiSevenSegment::setBlank()
 {
     for (unsigned char i = 1; i < 9; i++)
     {
-        writeCmd(static_cast<mimodule::ModuleMiSevenSegmentMaxCommand>(i), 0x0f);
+        writeCmd(static_cast<mimodule::ModuleMiSevenSegmentMaxCommand>(i), static_cast<uint8_t>(ModuleMiSevenSegmentMaxCommand::Blank));
     }
 }
 
@@ -48,6 +56,7 @@ mimodule::ModuleResult mimodule::ModuleMiSevenSegment::deinit()
 
 mimodule::ModuleResult mimodule::ModuleMiSevenSegment::open()
 {
+   
     if (_SPIDriver.open() != miDriver::DriverResults::Ok)
     {
         return ModuleResult::ErrorInit;
@@ -58,60 +67,59 @@ mimodule::ModuleResult mimodule::ModuleMiSevenSegment::open()
     writeCmd(ModuleMiSevenSegmentMaxCommand::Shutdown, 1);
     writeCmd(ModuleMiSevenSegmentMaxCommand::Intensity, 0x0f);
     setBlank();
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleMiSevenSegment::close()
 {
+    ModuleBase::close();
     writeCmd(ModuleMiSevenSegmentMaxCommand::Shutdown, 0);
     _SPIDriver.close();
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiSevenSegment::readInputs(bool init)
+void mimodule::ModuleMiSevenSegment::ValueChanged(mimodule::ModuleValue& value, const std::string& id)
+{
+    if (contains(id, std::string("Segment")))
+    {
+        Command cmd;
+        cmd.Segment = getLastCharAsInt8(id);
+        cmd.SevenSegmentCommand = value.getValue<uint8_t>();
+
+        printf("ModuleMiSevenSegment %d %d \n", cmd.Segment, cmd.SevenSegmentCommand);
+        if ((cmd.SevenSegmentCommand < 9) || (cmd.SevenSegmentCommand == 0x0f))
+        {
+            cmd.Segment = 9 - cmd.Segment;
+            writeCmd(cmd.Segment, cmd.SevenSegmentCommand);
+        }
+    }
+    else if(id == "Control")
+    {
+        Command cmd;
+        cmd.ControlCommand = value.getValue<uint32_t>();
+        ControlCommand ctrl = static_cast<ControlCommand>(cmd.ControlCommand);
+        switch (ctrl)
+        {
+        case ControlCommand::Blank:
+        {
+            setBlank();
+            break;
+        }
+        case ControlCommand::None:
+        {
+            break;
+        }
+        }
+    }
+}
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::readInputsPrivate(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeOutputsPrivate()
 {
-    ChannelList::iterator iterChannels;
-   
-    for (iterChannels = _Channels.begin(); iterChannels < _Channels.end(); ++iterChannels)
-    {
-        unsigned char u8Value = 0;
-        unsigned char u32Value = 0;
-        controlCommand ctrl = controlCommand::Blank;
-
-        if ((*iterChannels)->value().changed())
-        {
-            if (contains((*iterChannels)->id(), std::string("Segment")))
-            {
-                int seg = getLastCharAsInt((*iterChannels)->id());
-               
-                u8Value << (*iterChannels)->value();
-                writeCmd(static_cast<ModuleMiSevenSegmentMaxCommand>((9 - seg)), u8Value);
-            }
-            else
-            {
-                u32Value << (*iterChannels)->value();
-                ctrl = static_cast<controlCommand>(u32Value);
-                switch (ctrl)
-                {
-                case controlCommand::Blank:
-                {
-                    setBlank();
-                    break;
-                }
-                case controlCommand::None:
-                {
-                    break;;
-                }
-                }
-            }
-        }
-    }
-
     return ModuleResult::Ok;
 }
 

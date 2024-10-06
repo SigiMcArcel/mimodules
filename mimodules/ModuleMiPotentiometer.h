@@ -25,8 +25,8 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs(bool init);
-		virtual ModuleResult writeOutputs();
+		virtual ModuleResult readInputsPrivate(bool init);
+		virtual ModuleResult writeOutputsPrivate();
 	public:
 		ModuleMiPotentiometer(uint8_t address,
 			double filter,
@@ -34,9 +34,8 @@ namespace mimodule
 			double voltageRangeADC,
 			double maxAnalogVoltageInput,
 			double maxDigitsADC,
-			double maxDigits
-			)
-			:ModuleBase(8, 0, name)
+			double maxDigits, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
+			:ModuleBase(name, 8, 0, syncMode, cycleTime)
 			, _I2CDriver(address)
 			, _Address(address)
 			, _Filter(filter)
@@ -49,8 +48,6 @@ namespace mimodule
 		{
 			_Channels.push_back(new ModuleChannel("Potentiometer", ModulValueType::Double, 0, ModulChannelDirection::Input));
 		}
-
-		uint16_t value();
 	};
 }
 

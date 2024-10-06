@@ -50,7 +50,7 @@ public:
     {
         bool val = false;
         val << value;
-        printf("GeconEvents ValueChanged % s value = %d\n", id.c_str(), val);
+  
     }
 
 };

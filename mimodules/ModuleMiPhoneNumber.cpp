@@ -28,35 +28,29 @@ mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::open()
     {
         return ModuleResult::ErrorInit;
     }
-
-    _Timer.Start(_CycleTime);
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::close()
 {
-    _Timer.Stop();
+    ModuleBase::close();
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputs(bool init)
+mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputsPrivate(bool init)
 {   
     if (_ChoosedNumberChanged)
     { 
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         _ChoosedNumberChanged = false;
         iter = _Channels.begin();
-        _ChoosedNumber >> (*iter)->value();
-        if ((*iter)->valueChangedEvent() != nullptr)
-        {
-            (*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
-        }
-
+        (*iter)->value().setValue(_ChoosedNumber);
     }
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::writeOutputsPrivate()
 {
     return ModuleResult::Ok;
 }
@@ -68,7 +62,7 @@ int mimodule::ModuleMiPhoneNumber::value()
 
 void mimodule::ModuleMiPhoneNumber::eventOccured(void* sender, const std::string& name)
 {
-    if ("phone" == name)
+    if ("IO" == name)
     {
         bool stateStart = _GPIODriver.GpioRead(_GpioPinStart);
         bool statePulse = _GPIODriver.GpioRead(_GpioPinPulse);
@@ -116,4 +110,5 @@ void mimodule::ModuleMiPhoneNumber::eventOccured(void* sender, const std::string
         }
         _LastPulse = statePulse;
     }
+    mimodule::ModuleBase::eventOccured(sender, name);
 }

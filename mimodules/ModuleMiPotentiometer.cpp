@@ -18,16 +18,18 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::open()
     {
         return ModuleResult::ErrorInit;
     }
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleMiPotentiometer::close()
 {
+    ModuleBase::close();
     _I2CDriver.close();
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
+mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputsPrivate(bool init)
 {
 	double dval = getADCValue();
     double percent = 100.0 / _MaxDigits * dval;
@@ -37,11 +39,7 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
         {
-            percent >> (*iter)->value();
-            if ((*iter)->valueChangedEvent() != nullptr)
-            {
-                (*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
-            }
+            (*iter)->value().setValue<double>(percent);
         }
     }
     _LastPercent = percent;
@@ -49,12 +47,7 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPotentiometer::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleMiPotentiometer::writeOutputsPrivate()
 {
     return ModuleResult::Ok;
-}
-
-uint16_t mimodule::ModuleMiPotentiometer::value()
-{
-    return _InputBuffer.getValue<uint16_t>(0);
 }

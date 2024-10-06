@@ -17,36 +17,33 @@ mimodule::ModuleResult mimodule::ModuleHoerterOutput::open()
         return ModuleResult::ErrorInit;
     }
     _OutputBuffer.setValue<uint8_t>(0xff,0);
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleHoerterOutput::close()
 {
+    ModuleBase::close();
     _I2CDriver.close();
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterOutput::readInputs(bool init)
+void mimodule::ModuleHoerterOutput::ValueChanged(mimodule::ModuleValue& value, const std::string& id)
+{
+    bool val = false;
+    val = value.getValue<bool>();
+    //hoerter Outputs are inverted
+    val = !val;
+    _OutputBuffer.setBoolean(val, getChannel(id)->bitOffset());
+}
+
+mimodule::ModuleResult mimodule::ModuleHoerterOutput::readInputsPrivate(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterOutput::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleHoerterOutput::writeOutputsPrivate()
 {
-    ChannelList::iterator iterChannels;
-    for (iterChannels = _Channels.begin(); iterChannels < _Channels.end(); ++iterChannels)
-    {
-        if ((*iterChannels)->value().changed())
-        {
-            bool val = false;
-            val << (*iterChannels)->value();
-            //hoerter Outputs are inverted
-            val = !val;
-            _OutputBuffer.setBoolean(val, (*iterChannels)->bitOffset());
-        }
-    }
-
-
     if (_OutputBuffer != _LastOutputBuffer)
     {
         if (_I2CDriver.write(1, _OutputBuffer.buffer()) != miDriver::DriverResults::Ok)

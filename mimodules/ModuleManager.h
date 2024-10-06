@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "ModuleInterface.h"
+#include "ModuleTypes.h"
 #include <mi/miutils/Timer.h>
 
 namespace mimodule
@@ -21,8 +22,8 @@ namespace mimodule
 		}
 		void start();
 		void stop();
+		// SyncModeSync
 		void addModule(mimodule::ModuleInterface* module);
-
 
 		// Geerbt über EventListener
 		virtual void eventOccured(void* sender, const std::string& name) override;

@@ -2,7 +2,6 @@
 #include <string>
 #include <stdint.h>
 #include <new>
-#include "ModuleInterface.h"
 #include "ModuleBuffer.h"
 #include "ModuleValue.h"
 
@@ -13,6 +12,7 @@ namespace mimodule
 		Input,
 		Output
 	};
+
 	typedef struct ModuleChannelParameter_t
 	{
 		size_t Size;
@@ -43,7 +43,7 @@ namespace mimodule
 			:_Id(id)
 			, _BitOffset(bitOffset)
 			, _Type(type)
-			, _Value(type)
+			, _Value(type,id)
 			, _LastValue(type)
 			, _Direction(direction)
 			, _Event(nullptr)
@@ -72,19 +72,21 @@ namespace mimodule
 				memcpy(_Parameter, other._Parameter, other._Parameter->Size);
 			}
 		}
+
 		~ModuleChannel()
 		{
 			delete _Parameter;
 		}
-		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent)
+
+		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent,bool checkChanges)
 		{
 			if (valueChangedEvent != nullptr)
 			{
-				_Event = valueChangedEvent;
-				return true;
+				return _Value.registerChannelEvent(valueChangedEvent, checkChanges);
 			}
 			return false;
 		}
+
 		const std::string& id() const
 		{
 			return _Id;
@@ -114,6 +116,7 @@ namespace mimodule
 		{
 			return _Event;
 		}
+
 		ModuleChannelParameter* parameter() const
 		{
 			return _Parameter;
@@ -126,81 +129,77 @@ namespace mimodule
 			case ModulValueType::Boolean:
 			{
 				bool val = iobuffer.getBoolean(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Double:
 			{
 				double val = iobuffer.getValue<double>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Float:
 			{
 				float val = iobuffer.getValue<float>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Int8:
 			{
 				int8_t val = iobuffer.getValue<int8_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Int16:
 			{
 				int16_t val = iobuffer.getValue<int16_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Int32:
 			{
 				int32_t val = iobuffer.getValue<int32_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Int64:
 			{
 				int32_t val = iobuffer.getValue<int32_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Uint8:
 			{
 				uint8_t val = iobuffer.getValue<uint8_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Uint16:
 			{
 				uint16_t val = iobuffer.getValue<uint16_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Uint32:
 			{
 				uint32_t val = iobuffer.getValue<uint32_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			case ModulValueType::Uint64:
 			{
 				uint64_t val = iobuffer.getValue<uint64_t>(_BitOffset);
-				val >> _Value;
+				_Value.setValue(val);
 				break;
 			}
 			
 			}
 			
 		}
+
 		ModuleValue& value()
 		{
 			return _Value;
 		}
-
-
 	};
-
-	
-
 }

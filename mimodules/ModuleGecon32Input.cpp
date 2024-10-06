@@ -18,18 +18,19 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::open()
     {
         return ModuleResult::ErrorInit;
     }
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleGecon32Input::close()
 {
+    ModuleBase::close();
     _ModbusDriver->close();
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs(bool init)
+mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputsPrivate(bool init)
 {
-    
     if(_ModbusDriver->readInputBits(_Address,32,miDriver::ModbusDriverAccessType_e::BITS, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
         _InputBuffer.cpyTo(_LastInputBuffer);
@@ -45,11 +46,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs(bool init)
             bool valLast = _LastInputBuffer.getBoolean((*iter)->bitOffset());
             if ((val != valLast) || init)
             {
-                val >> (*iter)->value();
-                if ((*iter)->valueChangedEvent() != nullptr)
-                {
-                    (*iter)->valueChangedEvent()->ValueChanged((*iter)->value(), (*iter)->id());
-                }
+                (*iter)->value().setValue(val);
             }
         }
     }
@@ -59,7 +56,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs(bool init)
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Input::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleGecon32Input::writeOutputsPrivate()
 {
     return ModuleResult::Ok;
 }

@@ -14,8 +14,8 @@ namespace mimodule
 		virtual void getMaxDigits() override;
 
 	public:
-		ModuleMiPotentiometerMCP4725(uint8_t address, double filter, const std::string& name)
-			:ModuleMiPotentiometer(address, filter, name, 5000.0, 5000.0, _MCP4725MaxDigits, 0)
+		ModuleMiPotentiometerMCP4725(uint8_t address, double filter, const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
+			:ModuleMiPotentiometer(address, filter, name, 5000.0, 5000.0, _MCP4725MaxDigits, 0,syncMode,cycleTime)
 			
 		{
 

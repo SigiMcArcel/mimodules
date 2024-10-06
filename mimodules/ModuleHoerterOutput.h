@@ -6,7 +6,6 @@
 
 namespace mimodule
 {
-	
 	class ModuleHoerterOutput : public mimodule::ModuleBase
 	{
 	private:
@@ -20,12 +19,13 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputs(bool init);
-		virtual ModuleResult writeOutputs();
+		virtual ModuleResult readInputsPrivate(bool init) override;
+		virtual ModuleResult writeOutputsPrivate() override;
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
 
 	public:
-		ModuleHoerterOutput(uint8_t address, const std::string& name)
-			:ModuleBase(1, 1,name)
+		ModuleHoerterOutput(uint8_t address, const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
+			:ModuleBase(name, 0, 1, syncMode, cycleTime)
 			, _I2CDriver(address)
 			, _Address(address)
 	

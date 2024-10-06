@@ -24,11 +24,13 @@ mimodule::ModuleResult mimodule::ModuleMidiOutput::open()
     Resetmessage.U.MessageRaw[0] = 0xff;
     Resetmessage.Len = 1;
     _Midi->write(Resetmessage);
+    ModuleBase::open();
     return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleMidiOutput::close()
 {
+    ModuleBase::close();
     if (_Midi == nullptr)
     {
         return ModuleResult::ErrorInvalidBuffer;
@@ -37,41 +39,33 @@ mimodule::ModuleResult mimodule::ModuleMidiOutput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiOutput::readInputs()
+void mimodule::ModuleMidiOutput::ValueChanged(mimodule::ModuleValue& value, const std::string& id)
+{
+    bool val = false;
+    val = value.getValue<bool>();
+   
+    miDriver::MidiMessage message;
+    message.U.Message.Key = static_cast<unsigned char>(getChannel(id)->bitOffset());
+    message.U.Message.Velocity = 127;
+    message.U.Message.StatusByte.Channel = static_cast<unsigned char>(_MidiChannel);
+    message.Len = 3;
+    if (val)
+    {
+        message.U.Message.StatusByte.Command = miDriver::MidiCommand_e::NoteOn;
+    }
+    else
+    {
+        message.U.Message.StatusByte.Command = miDriver::MidiCommand_e::NoteOff;
+    }
+    _Midi->write(message);
+}
+
+mimodule::ModuleResult mimodule::ModuleMidiOutput::readInputsPrivate(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiOutput::writeOutputs()
+mimodule::ModuleResult mimodule::ModuleMidiOutput::writeOutputsPrivate()
 {
-    ChannelList::iterator iterChannels;
-    if (_Midi == nullptr)
-    {
-        return ModuleResult::ErrorInvalidBuffer;
-    }
-    for (iterChannels = _Channels.begin(); iterChannels < _Channels.end(); ++iterChannels)
-    {
-        if ((*iterChannels)->value().changed())
-        {
-            bool val = false;
-           
-            val << (*iterChannels)->value();
-            miDriver::MidiMessage message;
-            message.U.Message.Key = static_cast<unsigned char>((*iterChannels)->bitOffset());
-            message.U.Message.Velocity = 127;
-            message.U.Message.StatusByte.Channel = static_cast<unsigned char>(_MidiChannel);
-            message.Len = 3;
-            if (val)
-            {
-                message.U.Message.StatusByte.Command = miDriver::MidiCommand_e::NoteOn;
-            }
-            else
-            {
-                message.U.Message.StatusByte.Command = miDriver::MidiCommand_e::NoteOff;
-            }
-            _Midi->write(message);
-        }
-    }
-
     return ModuleResult::Ok;
 }
