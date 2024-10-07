@@ -45,7 +45,7 @@ mimodule::ModuleResult mimodule::ModuleMiPhoneNumber::readInputsPrivate(bool ini
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         _ChoosedNumberChanged = false;
         iter = _Channels.begin();
-        (*iter)->value().setValue(_ChoosedNumber);
+        (*iter)->value().setValue(_ChoosedNumber,init);
     }
     return ModuleResult::Ok;
 }

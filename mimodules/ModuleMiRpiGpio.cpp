@@ -191,7 +191,7 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputsPrivate(bool init)
 			{
 				bool val = false;
 				val = _GPIODriver.GpioRead(conf->Number,&results);
-				(*iter)->value().setValue<bool>(val);
+				(*iter)->value().setValue<bool>(val,init);
 			}
 		}
 	}

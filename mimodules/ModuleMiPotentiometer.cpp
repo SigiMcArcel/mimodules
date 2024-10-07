@@ -31,15 +31,15 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::close()
 
 mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputsPrivate(bool init)
 {
-	double dval = getADCValue();
+	double dval = static_cast<double>(getADCValue());
     double percent = 100.0 / _MaxDigits * dval;
     double diff = fabs(percent - _LastPercent);
-    if(((_LastPercent != percent) || init) && (diff > _Filter))
+    if((_LastPercent != percent) && (diff > _Filter) || init)
     {
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
         {
-            (*iter)->value().setValue<double>(percent);
+            (*iter)->value().setValue<double>(percent,init);
         }
     }
     _LastPercent = percent;

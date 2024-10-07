@@ -132,11 +132,11 @@ namespace mimodule
 		}
 
 		template<typename T>
-		void setValue(T& value)
+		void setValue(T& value,bool forceEvent = false)
 		{
 			T lastValue = *reinterpret_cast<T*>(_Buffer.get());
 			*reinterpret_cast<T*>(_Buffer.get()) = value;
-			if (_CheckChanges)
+			if (_CheckChanges && !forceEvent)
 			{
 				if (lastValue != value)
 				{

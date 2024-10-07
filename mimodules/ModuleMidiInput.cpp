@@ -52,12 +52,12 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::readInputsPrivate(bool init)
                 {
                     //_Channels[message.U.Message.Key].
                     bool val = true;
-                    _Channels[message.U.Message.Key]->value().setValue(val);
+                    _Channels[message.U.Message.Key]->value().setValue(val,init);
                 }
                 else
                 {
                     bool val = false;
-                    _Channels[message.U.Message.Key]->value().setValue(val);
+                    _Channels[message.U.Message.Key]->value().setValue(val,init);
                 }
                 if (_Channels[message.U.Message.Key]->valueChangedEvent())
                 {

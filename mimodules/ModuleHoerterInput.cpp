@@ -43,10 +43,7 @@ mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputsPrivate(bool init
         {
             bool val = _InputBuffer.getBoolean((*iter)->bitOffset());
             bool valLast = _LastInputBuffer.getBoolean((*iter)->bitOffset());
-            if ((val != valLast) || init)
-            {
-                (*iter)->value().setValue(val);
-            }
+            (*iter)->value().setValue(val,init);
         }
     }
     _InputBuffer.cpyTo(_LastInputBuffer);

@@ -43,11 +43,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputsPrivate(bool init
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
         {
             bool val = _InputBuffer.getBoolean((*iter)->bitOffset());
-            bool valLast = _LastInputBuffer.getBoolean((*iter)->bitOffset());
-            if ((val != valLast) || init)
-            {
-                (*iter)->value().setValue(val);
-            }
+            (*iter)->value().setValue(val,init);
         }
     }
     _InputBuffer.cpyTo(_LastInputBuffer);
