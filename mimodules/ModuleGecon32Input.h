@@ -31,16 +31,14 @@ namespace mimodule
 		}
 		
 	protected:
-		virtual ModuleResult init();
-		virtual ModuleResult deinit();
-		virtual ModuleResult open();
-		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init);
-		virtual ModuleResult writeOutputsPrivate();
+		virtual ModuleResult open() override;
+		virtual ModuleResult close() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 
 	public:
-		ModuleGecon32Input(const std::string& device,int address,const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name,4, 0, syncMode,cycleTime)
+		ModuleGecon32Input(const std::string& device,int address,const std::string& name)
+			:ModuleBase(name,4, 0)
 			, _Device(device)
 			, _Address(address)
 		{

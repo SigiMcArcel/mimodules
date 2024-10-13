@@ -3,7 +3,7 @@
 
 mimodule::ModuleResult mimodule::ModuleMiPotentiometer::init()
 {
-   getMaxDigits();
+    getMaxDigits();
     return ModuleResult();
 }
 
@@ -29,12 +29,12 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
 {
 	double dval = static_cast<double>(getADCValue());
     double percent = 100.0 / _MaxDigits * dval;
     double diff = fabs(percent - _LastPercent);
-    if((_LastPercent != percent) && (diff > _Filter) || init)
+    if(((_LastPercent != percent) && (diff > _Filter)) || init)
     {
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
@@ -47,7 +47,7 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputsPrivate(bool i
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiPotentiometer::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleMiPotentiometer::writeOutputs()
 {
     return ModuleResult::Ok;
 }

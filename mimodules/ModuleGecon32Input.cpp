@@ -1,17 +1,6 @@
 #include "ModuleGecon32Input.h"
 #include "ModuleChannel.h"
 
-
-mimodule::ModuleResult mimodule::ModuleGecon32Input::init()
-{
-    return ModuleResult();
-}
-
-mimodule::ModuleResult mimodule::ModuleGecon32Input::deinit()
-{
-    return ModuleResult();
-}
-
 mimodule::ModuleResult mimodule::ModuleGecon32Input::open()
 {
     if (_ModbusDriver->open() != miDriver::DriverResults::Ok)
@@ -29,7 +18,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputs(bool init)
 {
     if(_ModbusDriver->readInputBits(_Address,32,miDriver::ModbusDriverAccessType_e::BITS, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
@@ -52,7 +41,7 @@ mimodule::ModuleResult mimodule::ModuleGecon32Input::readInputsPrivate(bool init
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Input::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleGecon32Input::writeOutputs()
 {
     return ModuleResult::Ok;
 }

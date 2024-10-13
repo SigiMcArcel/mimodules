@@ -60,12 +60,12 @@ void mimodule::ModuleMidiOutput::ValueChanged(mimodule::ModuleValue& value, cons
     _Midi->write(message);
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiOutput::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleMidiOutput::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiOutput::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleMidiOutput::writeOutputs()
 {
     return ModuleResult::Ok;
 }

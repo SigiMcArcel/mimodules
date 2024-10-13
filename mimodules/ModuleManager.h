@@ -6,7 +6,7 @@
 
 namespace mimodule
 {
-	class ModuleManager : public miutils::EventListener
+	class ModuleManager : public miutils::TimerEventListener
 	{
 	private:
 		miutils::Timer _IOTimer;
@@ -15,7 +15,7 @@ namespace mimodule
 	public:
 		ModuleManager() = default;
 		ModuleManager(int32_t cycletime)
-			:_IOTimer("IOTimer",this)
+			:_IOTimer("IOTimer", _CycleTime, 0, 10, miutils::SchedulerType::Fifo,this)
 			,_CycleTime(cycletime)
 		{
 
@@ -26,7 +26,7 @@ namespace mimodule
 		void addModule(mimodule::ModuleInterface* module);
 
 		// Geerbt über EventListener
-		virtual void eventOccured(void* sender, const std::string& name) override;
+		virtual void timerEventOccured(void* sender, const std::string& name) override;
 
 	};
 }

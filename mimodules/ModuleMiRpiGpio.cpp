@@ -177,7 +177,7 @@ void mimodule::ModuleMiRpiGpio::ValueChanged(mimodule::ModuleValue& value, const
 	}
 }
 
-mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs(bool init)
 {
 	miDriver::DriverResults results = miDriver::DriverResults::Ok;
 	std::vector<mimodule::ModuleChannel*>::iterator iter;
@@ -198,7 +198,7 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputsPrivate(bool init)
 	return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiRpiGpio::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleMiRpiGpio::writeOutputs()
 {
 	return ModuleResult::Ok;
 }

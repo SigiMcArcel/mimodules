@@ -55,8 +55,8 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init) override;
-		virtual ModuleResult writeOutputsPrivate() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
 
 	public:
@@ -66,8 +66,8 @@ namespace mimodule
 			Blank
 		}ControlCommand;
 
-		ModuleMiSevenSegment(const std::string& device,const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name, 2, 0, syncMode, cycleTime)
+		ModuleMiSevenSegment(const std::string& device,const std::string& name)
+			:ModuleBase(name, 2, 0)
 			, _SPIDriver(miDriver::SPIModes::SPIMode0,250000, miDriver::SPIBitsPerWord::SPI8Bits,device)
 		{
 			_Channels.push_back(new ModuleChannel("Segment1", ModulValueType::Uint8, 0, ModulChannelDirection::Output));

@@ -24,7 +24,6 @@ namespace mimodule
 	typedef std::vector<ModuleChannel*> ChannelList;
 	class ModuleBase 
 	: public ModuleInterface
-	, public miutils::EventListener
 	{
 		friend class ModuleManager;
 	protected:
@@ -37,12 +36,6 @@ namespace mimodule
 		ModuleBuffer _OutputBuffer;
 		ModuleBuffer _LastOutputBuffer;
 		ChannelList _Channels;
-		miutils::Timer _Timer;
-		mimodule::ModuleIOSyncMode _SyncMode;
-		int _CycleTime;
-
-		virtual mimodule::ModuleResult readInputsPrivate(bool init);
-		virtual mimodule::ModuleResult writeOutputsPrivate();
 
 	public:
 		ModuleBase(const std::string& name,ModuleByteSize inputSize, ModuleByteSize outputSize)
@@ -54,27 +47,9 @@ namespace mimodule
 			, _LastInputBuffer(inputSize)
 			, _OutputBuffer(outputSize)
 			, _LastOutputBuffer(outputSize)
-			, _Timer("IO",this)
-			, _SyncMode(mimodule::ModuleIOSyncMode::SyncModeManager)
-			, _CycleTime(0)
+		
 		{
 			
-		};
-
-		ModuleBase(const std::string& name,ModuleByteSize inputSize, ModuleByteSize outputSize,mimodule::ModuleIOSyncMode syncMode,int cycleTime)
-			:_Name(name)
-			, _State(ModuleResult::Ok)
-			, _MaxInputBitSize(inputSize)
-			, _MaxOutputBitSize(outputSize)
-			, _InputBuffer(inputSize)
-			, _LastInputBuffer(inputSize)
-			, _OutputBuffer(outputSize)
-			, _LastOutputBuffer(outputSize)
-			, _Timer("IO", this)
-			, _SyncMode(syncMode)
-			, _CycleTime(cycleTime)
-		{
-
 		};
 
 		ModuleBase()
@@ -86,8 +61,6 @@ namespace mimodule
 			, _LastInputBuffer(0)
 			, _OutputBuffer(0)
 			, _LastOutputBuffer(0)
-			, _Timer("IO", this)
-			, _SyncMode(mimodule::ModuleIOSyncMode::SyncModeManager)
 		{
 			
 		};
@@ -97,17 +70,13 @@ namespace mimodule
 		ModuleChannel* getChannel(std::string id);
 		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent, bool checkChanges, const std::string& id);
 
-		virtual mimodule::ModuleResult open();
-		virtual mimodule::ModuleResult close();
-		virtual mimodule::ModuleResult readInputs(bool init);
-		virtual mimodule::ModuleResult writeOutputs();
-		
-		// Geerbt über EventListener
-		virtual void eventOccured(void* sender, const std::string& name) override;
-
-		
+		virtual const std::string name() override;
+		virtual mimodule::ModuleResult init() override;
+		virtual mimodule::ModuleResult deinit() override;
+		virtual mimodule::ModuleResult open() override;
+		virtual mimodule::ModuleResult close() override;
+		virtual mimodule::ModuleResult readInputs(bool init) override;
+		virtual mimodule::ModuleResult writeOutputs() override;
 	};
-
-	
 }
 

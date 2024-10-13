@@ -14,6 +14,7 @@ namespace mimodule
 	class ModuleInterface
 	{
 	public:
+		virtual const std::string name() = 0;
 		virtual mimodule::ModuleResult init() = 0;
 		virtual mimodule::ModuleResult deinit() = 0;
 		virtual mimodule::ModuleResult open() = 0;

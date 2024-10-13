@@ -14,13 +14,13 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init) override;
-		virtual ModuleResult writeOutputsPrivate() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
 
 	public:
-		ModuleMidiOutput(uint8_t channel, const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name, 0, 8, syncMode, cycleTime)
+		ModuleMidiOutput(uint8_t channel, const std::string& name)
+			:ModuleBase(name, 0, 8)
 			, _Midi(miDriver::MidiDriver::GetInstance("/dev/snd/midiC1D0"))
 			, _MidiChannel(channel)
 		{

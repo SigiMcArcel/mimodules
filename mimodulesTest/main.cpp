@@ -148,7 +148,7 @@ public:
     {
         _Enable = false;
     }
-    virtual void eventOccured(void* sender, const std::string& name)
+    virtual void timerEventOccured(void* sender, const std::string& name)
     {
         if (_Enable)
         {

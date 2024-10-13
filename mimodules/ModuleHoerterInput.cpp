@@ -29,7 +29,7 @@ mimodule::ModuleResult mimodule::ModuleHoerterInput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputs(bool init)
 {
     if(_I2CDriver.read(1, _InputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
@@ -42,7 +42,6 @@ mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputsPrivate(bool init
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
         {
             bool val = _InputBuffer.getBoolean((*iter)->bitOffset());
-            bool valLast = _LastInputBuffer.getBoolean((*iter)->bitOffset());
             (*iter)->value().setValue(val,init);
         }
     }
@@ -52,7 +51,7 @@ mimodule::ModuleResult mimodule::ModuleHoerterInput::readInputsPrivate(bool init
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterInput::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleHoerterInput::writeOutputs()
 {
     return ModuleResult::Ok;
 }

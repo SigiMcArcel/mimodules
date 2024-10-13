@@ -20,13 +20,13 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init) override;
-		virtual ModuleResult writeOutputsPrivate() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 		
 
 	public:
-		ModuleHoerterInput(uint8_t address,const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name, 1, 0, syncMode, cycleTime)
+		ModuleHoerterInput(uint8_t address,const std::string& name)
+			:ModuleBase(name, 1, 0)
 			,_I2CDriver(address)
 			,_Address(address)
 		{

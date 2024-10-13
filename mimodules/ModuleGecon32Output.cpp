@@ -1,17 +1,6 @@
 #include "ModuleGecon32Output.h"
 #include "ModuleChannel.h"
 
-
-mimodule::ModuleResult mimodule::ModuleGecon32Output::init()
-{
-    return ModuleResult();
-}
-
-mimodule::ModuleResult mimodule::ModuleGecon32Output::deinit()
-{
-    return ModuleResult();
-}
-
 mimodule::ModuleResult mimodule::ModuleGecon32Output::open()
 {
     if (_ModbusDriver->open() != miDriver::DriverResults::Ok)
@@ -36,24 +25,18 @@ void mimodule::ModuleGecon32Output::ValueChanged(mimodule::ModuleValue& value, c
     _OutputBuffer.setBoolean(val, getChannel(id)->bitOffset());
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Output::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleGecon32Output::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleGecon32Output::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleGecon32Output::writeOutputs()
 {
-    if (_OutputBuffer != _LastOutputBuffer)
+    if (_ModbusDriver->writeBits(_Address, miDriver::ModbusDriverAccessType_e::BITS, 32, _OutputBuffer.buffer()) != miDriver::DriverResults::Ok)
     {
-        if (_ModbusDriver->writeBits(_Address, miDriver::ModbusDriverAccessType_e::BITS, 32, _OutputBuffer.buffer()) != miDriver::DriverResults::Ok)
-        {
-            printf("writeOutputs  error %s\n", _Name.c_str());
-
-            _OutputBuffer.cpyTo(_LastOutputBuffer);
-            return ModuleResult::ErrorWrite;
-        }
+        _OutputBuffer.cpyTo(_LastOutputBuffer);
+        return ModuleResult::ErrorWrite;
     }
-    _OutputBuffer.cpyTo(_LastOutputBuffer);
     return ModuleResult::Ok;
 }
 

@@ -87,7 +87,7 @@ void mimodule::ModuleMiSevenSegment::ValueChanged(mimodule::ModuleValue& value, 
         cmd.Segment = getLastCharAsInt8(id);
         cmd.SevenSegmentCommand = value.getValue<uint8_t>();
 
-        printf("ModuleMiSevenSegment %d %d \n", cmd.Segment, cmd.SevenSegmentCommand);
+        
         if ((cmd.SevenSegmentCommand < 9) || (cmd.SevenSegmentCommand == 0x0f))
         {
             cmd.Segment = 9 - cmd.Segment;
@@ -113,12 +113,12 @@ void mimodule::ModuleMiSevenSegment::ValueChanged(mimodule::ModuleValue& value, 
         }
     }
 }
-mimodule::ModuleResult mimodule::ModuleMiSevenSegment::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleMiSevenSegment::writeOutputs()
 {
     return ModuleResult::Ok;
 }

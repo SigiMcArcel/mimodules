@@ -37,12 +37,12 @@ void mimodule::ModuleHoerterOutput::ValueChanged(mimodule::ModuleValue& value, c
     _OutputBuffer.setBoolean(val, getChannel(id)->bitOffset());
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterOutput::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleHoerterOutput::readInputs(bool init)
 {
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleHoerterOutput::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleHoerterOutput::writeOutputs()
 {
     if (_OutputBuffer != _LastOutputBuffer)
     {

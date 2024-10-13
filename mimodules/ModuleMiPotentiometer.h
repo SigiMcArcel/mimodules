@@ -21,12 +21,7 @@ namespace mimodule
 
 		virtual int32_t getADCValue() = 0;
 		virtual void getMaxDigits() = 0;
-		virtual ModuleResult init();
-		virtual ModuleResult deinit();
-		virtual ModuleResult open();
-		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init);
-		virtual ModuleResult writeOutputsPrivate();
+
 	public:
 		ModuleMiPotentiometer(uint8_t address,
 			double filter,
@@ -34,8 +29,8 @@ namespace mimodule
 			double voltageRangeADC,
 			double maxAnalogVoltageInput,
 			double maxDigitsADC,
-			double maxDigits, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name, 8, 0, syncMode, cycleTime)
+			double maxDigits)
+			:ModuleBase(name, 8, 0)
 			, _I2CDriver(address)
 			, _Address(address)
 			, _Filter(filter)
@@ -48,6 +43,13 @@ namespace mimodule
 		{
 			_Channels.push_back(new ModuleChannel("Potentiometer", ModulValueType::Double, 0, ModulChannelDirection::Input));
 		}
+
+		virtual ModuleResult init() override;
+		virtual ModuleResult deinit() override;
+		virtual ModuleResult open() override;
+		virtual ModuleResult close() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 	};
 }
 

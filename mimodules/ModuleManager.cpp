@@ -7,7 +7,7 @@ void mimodule::ModuleManager::start()
 		mod->init();
 		mod->open();
 	}
-	_IOTimer.Start(_CycleTime,nullptr,10,miutils::Schedulers::Fifo);
+	_IOTimer.Start();
 }
 
 void mimodule::ModuleManager::stop()
@@ -25,7 +25,7 @@ void mimodule::ModuleManager::addModule(mimodule::ModuleInterface* module)
 	_Modules.push_back(module);
 }
 
-void mimodule::ModuleManager::eventOccured(void* sender, const std::string& name)
+void mimodule::ModuleManager::timerEventOccured(void* sender, const std::string& name)
 {
 	if ("IOTimer" == name)
 	{

@@ -41,13 +41,13 @@ namespace mimodule
 		virtual ModuleResult deinit();
 		virtual ModuleResult open();
 		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init) override;
-		virtual ModuleResult writeOutputsPrivate() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
 
 	public:
-		ModuleMiRpiGpio(const std::string& name, const std::vector<ModuleMiRpiGpioConfiguration>& condiguration, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name, 2, 0, syncMode, cycleTime)
+		ModuleMiRpiGpio(const std::string& name, const std::vector<ModuleMiRpiGpioConfiguration>& condiguration)
+			:ModuleBase(name, 2, 0)
 			, _GPIODriver()
 			, _Configuration(condiguration)
 		{

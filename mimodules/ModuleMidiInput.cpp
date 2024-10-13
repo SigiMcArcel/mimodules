@@ -35,7 +35,7 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::close()
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiInput::readInputsPrivate(bool init)
+mimodule::ModuleResult mimodule::ModuleMidiInput::readInputs(bool init)
 {
     miDriver::MidiMessage message;
     if (_Midi == nullptr)
@@ -71,7 +71,7 @@ mimodule::ModuleResult mimodule::ModuleMidiInput::readInputsPrivate(bool init)
     return ModuleResult::Ok;
 }
 
-mimodule::ModuleResult mimodule::ModuleMidiInput::writeOutputsPrivate()
+mimodule::ModuleResult mimodule::ModuleMidiInput::writeOutputs()
 {
     return ModuleResult::Ok;
 }

@@ -21,16 +21,18 @@ namespace mimodule
 		int _RflagStart;
 		int _RflagPulse;
 
+		void getNumbers();
+
 	protected:
-		virtual ModuleResult init();
+		virtual ModuleResult init() override;
 		virtual ModuleResult deinit();
-		virtual ModuleResult open();
-		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init) override;
-		virtual ModuleResult writeOutputsPrivate() override;
+		virtual ModuleResult open()override;
+		virtual ModuleResult close()override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 	public:
-		ModuleMiPhoneNumber( int cycleTime,const std::string& name,int pinStart,int pinPulse, mimodule::ModuleIOSyncMode syncMode)
-			:ModuleBase(name, 2, 0, syncMode, cycleTime)
+		ModuleMiPhoneNumber( int cycleTime,const std::string& name,int pinStart,int pinPulse)
+			:ModuleBase(name, 2, 0)
 			, _GPIODriver()
 			, _Events()
 			, _ChoosedNumber(0)
@@ -45,9 +47,6 @@ namespace mimodule
 		{
 			_Channels.push_back(new ModuleChannel("PhoneNumber", ModulValueType::Uint8, 0, ModulChannelDirection::Input));
 		}
-
-		// Geerbt über EventListener
-		virtual void eventOccured(void* sender, const std::string& name) override;
 
 		int value();
 	};

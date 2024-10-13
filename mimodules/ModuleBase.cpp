@@ -3,14 +3,9 @@
 #include <sstream> //std::stringstream
 #include "ModuleBase.h"
 
-mimodule::ModuleResult mimodule::ModuleBase::readInputsPrivate(bool init)
+const std::string mimodule::ModuleBase::name()
 {
-    return ModuleResult::Ok;
-}
-
-mimodule::ModuleResult mimodule::ModuleBase::writeOutputsPrivate()
-{
-    return ModuleResult::Ok;
+	return _Name;
 }
 
 const mimodule::ModuleResult mimodule::ModuleBase::state() const
@@ -18,69 +13,34 @@ const mimodule::ModuleResult mimodule::ModuleBase::state() const
 	return _State;
 }
 
+mimodule::ModuleResult mimodule::ModuleBase::init()
+{
+	return ModuleResult::Ok;
+}
+
+mimodule::ModuleResult mimodule::ModuleBase::deinit()
+{
+	return ModuleResult::Ok;
+}
+
 mimodule::ModuleResult mimodule::ModuleBase::open()
 {
-	switch (_SyncMode)
-	{
-	case ModuleIOSyncMode::SyncModeNone:
-	case ModuleIOSyncMode::SyncModeManager:
-	{
-		readInputsPrivate(true);
-		break;
-	}
-	case ModuleIOSyncMode::SyncModeModuleFree:
-	{
-		_CycleTime = 0;
-	}
-	case ModuleIOSyncMode::SyncModeModuleCyclic:
-	{
-		readInputsPrivate(true);
-		_Timer.Start(_CycleTime);
-		break;
-	}
-	}
 	return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleBase::close()
 {
-	if ((_SyncMode == ModuleIOSyncMode::SyncModeModuleCyclic) || (_SyncMode == ModuleIOSyncMode::SyncModeModuleFree))
-	{
-		_Timer.Stop();
-	}
 	return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleBase::readInputs(bool init)
 {
-	if (_SyncMode == ModuleIOSyncMode::SyncModeNone)
-	{
-		return ModuleResult::Ok;
-	}
-	if (_SyncMode == ModuleIOSyncMode::SyncModeManager)
-	{
-		return readInputsPrivate(init);
-	}
 	return ModuleResult::Ok;
 }
 
 mimodule::ModuleResult mimodule::ModuleBase::writeOutputs()
 {
-	if (_SyncMode == ModuleIOSyncMode::SyncModeManager)
-	{
-		return writeOutputsPrivate();
-	}
 	return ModuleResult::Ok;
-}
-
-// Geerbt über EventListener
-void mimodule::ModuleBase::eventOccured(void* sender, const std::string& name)
-{
-	if (_SyncMode != ModuleIOSyncMode::SyncModeManager)
-	{
-		readInputsPrivate(false);
-		writeOutputsPrivate();
-	}
 }
 
 mimodule::ModuleChannel* mimodule::ModuleBase::getChannel(std::string id)

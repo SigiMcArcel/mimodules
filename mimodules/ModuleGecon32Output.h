@@ -36,17 +36,15 @@ namespace mimodule
 
 
 	protected:
-		virtual ModuleResult init();
-		virtual ModuleResult deinit();
-		virtual ModuleResult open();
-		virtual ModuleResult close();
-		virtual ModuleResult readInputsPrivate(bool init) override;
-		virtual ModuleResult writeOutputsPrivate() override;
+		virtual ModuleResult open() override;
+		virtual ModuleResult close() override;
+		virtual ModuleResult readInputs(bool init) override;
+		virtual ModuleResult writeOutputs() override;
 		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
 
 	public:
-		ModuleGecon32Output(const std::string& device, int address, const std::string& name, mimodule::ModuleIOSyncMode syncMode, int cycleTime)
-			:ModuleBase(name, 0, 4, syncMode, cycleTime)
+		ModuleGecon32Output(const std::string& device, int address, const std::string& name)
+			:ModuleBase(name, 0, 4)
 			, _Device(device)
 			, _Address(address)
 
