@@ -4,39 +4,34 @@ includedir=$(prefix)/include
 libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
-CXX_FLAGS = -fpic -Wall -Wl,--no-undefined
-LD_FLAGS = -shared -lpthread -lmidriver -lmiutils
+CXXFLAGS = -fpic -Wall -Wl,--no-undefined
+LD_FLAGS = -shared -lsndfile -lpthread -lasound
 
-SOURCES=ModuleBase.cpp ModuleBuffer.cpp ModuleHoerterInput.cpp ModuleHoerterOutput.cpp ModulePointer.cpp ModuleManager.cpp ModuleValue.cpp ModuleMiPotentiometer.cpp ModuleMidiOutput.cpp ModuleMidiInput.cpp
-OBJECTS=$(SOURCES:.cpp=.o)
+# Automatisch alle .cpp-Dateien im aktuellen Verzeichnis als SOURCES verwenden
+SOURCES := $(wildcard *.cpp)
+OBJECTS := $(SOURCES:.cpp=.o)
 
-LIBRARYOUT=libmimodules.so
+# Bibliotheksname basierend auf dem Verzeichnisnamen erstellen
+PROJECT_NAME := $(notdir $(CURDIR))
+LIBRARYOUT = lib$(PROJECT_NAME).so
 
-
+# Regel zum Kompilieren der .cpp-Dateien zu .o-Dateien
 .cpp.o:
-	$(CXX) $(CXX_FLAGS) $(INCLUDES) -c $<
-$(LIBRARYOUT):$(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $<
+
+# Regel zum Erstellen der Bibliothek
+$(LIBRARYOUT): $(OBJECTS)
 	$(CXX) $(LD_FLAGS) $(OBJECTS) -o $(LIBRARYOUT)
+
+# Regel zum Bereinigen der Build-Artefakte
 clean:
 	$(RM) $(LIBRARYOUT) *.o
-	
 
+# Regel zur Installation der Bibliothek und Header-Dateien
 install: $(LIBRARYOUT)
-	install -d $(DESTDIR)/${libdir}
-	install -D -m 0644 $(LIBRARYOUT) $(DESTDIR)/${libdir}/$(LIBRARYOUT)
-	install -d $(DESTDIR)/${includedir}
-	install -d $(DESTDIR)/${includedir}/mi
-	install -d $(DESTDIR)/${includedir}/mi/mimodules
-	install -D -m 0644 ModuleBase.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleBase.h
-	install -D -m 0644 ModuleBuffer.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleBuffer.h
-	install -D -m 0644 ModuleHoerterInput.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleHoerterInput.h
-	install -D -m 0644 ModulePointer.h $(DESTDIR)/${includedir}/mi/mimodules/ModulePointer.h
-	install -D -m 0644 ModuleHoerterOutput.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleHoerterOutput.h
-	install -D -m 0644 ModuleManager.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleManager.h
-	install -D -m 0644 ModuleValue.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleValue.h
-	install -D -m 0644 ModuleTypes.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleTypes.h
-	install -D -m 0644 ModuleChannel.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleChannel.h
-	install -D -m 0644 ModuleInterface.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleInterface.h
-	install -D -m 0644 ModuleMiPotentiometer.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleMiPotentiometer.h
-	install -D -m 0644 ModuleMidiInput.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleMidiInput.h
-	install -D -m 0644 ModuleMidiOutput.h $(DESTDIR)/${includedir}/mi/mimodules/ModuleMidiOutput.h
+	install -d $(DESTDIR)/$(libdir)
+	install -D -m 0644 $(LIBRARYOUT) $(DESTDIR)/$(libdir)/$(LIBRARYOUT)
+	install -d $(DESTDIR)/$(includedir)/mi/$(PROJECT_NAME)
+	for header in *.h; do \
+		install -D -m 0644 $$header $(DESTDIR)/$(includedir)/mi/$(PROJECT_NAME)/$$header; \
+	done
