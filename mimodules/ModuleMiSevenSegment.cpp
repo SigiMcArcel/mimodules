@@ -88,7 +88,7 @@ void mimodule::ModuleMiSevenSegment::ValueChanged(mimodule::ModuleValue& value, 
         cmd.SevenSegmentCommand = value.getValue<uint8_t>();
 
         
-        if ((cmd.SevenSegmentCommand < 9) || (cmd.SevenSegmentCommand == 0x0f))
+        if ((cmd.SevenSegmentCommand < 10) || (cmd.SevenSegmentCommand == 0x0f))
         {
             cmd.Segment = 9 - cmd.Segment;
             writeCmd(cmd.Segment, cmd.SevenSegmentCommand);
