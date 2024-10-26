@@ -16,7 +16,7 @@ namespace mimodule
 		virtual ModuleResult close();
 		virtual ModuleResult readInputs(bool init) override;
 		virtual ModuleResult writeOutputs() override;
-		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override;
 
 	public:
 		ModuleMidiOutput(uint8_t channel, const std::string& name)

@@ -24,6 +24,7 @@ namespace mimodule
 	typedef std::vector<ModuleChannel*> ChannelList;
 	class ModuleBase 
 	: public ModuleInterface
+	, public mimodule::ModuleValueChangedEvent
 	{
 		friend class ModuleManager;
 	protected:
@@ -36,6 +37,9 @@ namespace mimodule
 		ModuleBuffer _OutputBuffer;
 		ModuleBuffer _LastOutputBuffer;
 		ChannelList _Channels;
+		uint8_t _Address;
+
+		void setChannel(int pin, ModulValueType type, ModuleBitOffset offset, ModulChannelDirection dir);
 
 	public:
 		ModuleBase(const std::string& name,ModuleByteSize inputSize, ModuleByteSize outputSize)
@@ -47,9 +51,23 @@ namespace mimodule
 			, _LastInputBuffer(inputSize)
 			, _OutputBuffer(outputSize)
 			, _LastOutputBuffer(outputSize)
-		
+			, _Address(0)
 		{
 			
+		};
+
+		ModuleBase(const std::string& name, ModuleByteSize inputSize, ModuleByteSize outputSize,uint8_t address)
+			:_Name(name)
+			, _State(ModuleResult::Ok)
+			, _MaxInputBitSize(inputSize)
+			, _MaxOutputBitSize(outputSize)
+			, _InputBuffer(inputSize)
+			, _LastInputBuffer(inputSize)
+			, _OutputBuffer(outputSize)
+			, _LastOutputBuffer(outputSize)
+			, _Address(address)
+		{
+
 		};
 
 		ModuleBase()
@@ -68,6 +86,7 @@ namespace mimodule
 		~ModuleBase() = default;
 		const ModuleResult state() const;
 		ModuleChannel* getChannel(std::string id);
+		int getAddress();
 		bool registerChannelEvent(ModuleValueChangedEvent* valueChangedEvent, bool checkChanges, const std::string& id);
 
 		virtual const std::string name() override;
@@ -77,6 +96,7 @@ namespace mimodule
 		virtual mimodule::ModuleResult close() override;
 		virtual mimodule::ModuleResult readInputs(bool init) override;
 		virtual mimodule::ModuleResult writeOutputs() override;
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override;
 	};
 }
 

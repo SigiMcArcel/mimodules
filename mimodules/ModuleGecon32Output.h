@@ -8,23 +8,10 @@ namespace mimodule
 {
 	class ModuleGecon32Output 
 		: public mimodule::ModuleBase
-		, public mimodule::ModuleValueChangedEvent
 	{
 	private:
 		miDriver::ModbusDriver* _ModbusDriver;
 		std::string _Device;
-		int _Address;
-
-		void setChannel(int pin, ModulValueType type, ModuleBitOffset offset, ModulChannelDirection dir)
-		{
-			std::string name("A");
-			name.append(std::to_string(_Address));
-			name.append(".");
-			name.append(std::to_string(pin));
-			ModuleChannel* channel = new ModuleChannel(name, type, offset, dir);
-			channel->registerChannelEvent(this,true);
-			_Channels.push_back(channel);
-		}
 
 		void setupChannels(int num)
 		{
@@ -34,19 +21,17 @@ namespace mimodule
 			}
 		}
 
-
 	protected:
 		virtual ModuleResult open() override;
 		virtual ModuleResult close() override;
 		virtual ModuleResult readInputs(bool init) override;
 		virtual ModuleResult writeOutputs() override;
-		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override;
 
 	public:
 		ModuleGecon32Output(const std::string& device, int address, const std::string& name)
-			:ModuleBase(name, 0, 4)
+			:ModuleBase(name, 0, 4, address)
 			, _Device(device)
-			, _Address(address)
 
 		{
 			_ModbusDriver = miDriver::ModbusDriver::GetInstance(_Device);
@@ -85,11 +70,6 @@ namespace mimodule
 		void A30(bool val);
 		void A31(bool val);
 		void A32(bool val);
-
-		int getAddress()
-		{
-			return _Address;
-		}
 
 	};
 }

@@ -11,16 +11,6 @@ namespace mimodule
 	private:
 		miDriver::ModbusDriver *_ModbusDriver;
 		std::string _Device;
-		int _Address;
-		
-		void setChannel(int pin,ModulValueType type,ModuleBitOffset offset, ModulChannelDirection dir)
-		{
-			std::string name("E");
-			name.append(std::to_string(_Address));
-			name.append(".");
-			name.append(std::to_string(pin));
-			_Channels.push_back(new ModuleChannel(name, type, offset, dir));
-		}
 		
 		void setupChannels(int num)
 		{
@@ -38,9 +28,8 @@ namespace mimodule
 
 	public:
 		ModuleGecon32Input(const std::string& device,int address,const std::string& name)
-			:ModuleBase(name,4, 0)
+			:ModuleBase(name,4, 0, address)
 			, _Device(device)
-			, _Address(address)
 		{
 			_ModbusDriver =  miDriver::ModbusDriver::GetInstance(_Device);
 			setupChannels(32);
@@ -79,11 +68,6 @@ namespace mimodule
 		bool E31();
 		bool E32();
 
-		int getAddress()
-		{
-			return _Address;
-		}
-		
 	};
 }
 

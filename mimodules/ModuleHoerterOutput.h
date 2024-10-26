@@ -10,9 +10,15 @@ namespace mimodule
 	{
 	private:
 		miDriver::I2CDriver _I2CDriver;
-		uint8_t _Address;
 		std::vector<ModuleValueChangedEvent*> _Events;
 
+		void setupChannels(int num)
+		{
+			for (int i = 0; i < num; i++)
+			{
+				setChannel(i, ModulValueType::Boolean, static_cast<ModuleBitOffset>(i), ModulChannelDirection::Output);
+			}
+		}
 
 	protected:
 		virtual ModuleResult init();
@@ -21,23 +27,14 @@ namespace mimodule
 		virtual ModuleResult close();
 		virtual ModuleResult readInputs(bool init) override;
 		virtual ModuleResult writeOutputs() override;
-		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id)  override;
 
 	public:
 		ModuleHoerterOutput(uint8_t address, const std::string& name)
-			:ModuleBase(name, 0, 1)
-			, _I2CDriver(address)
-			, _Address(address)
-	
+			:ModuleBase(name, 0, 1, address)
+			, _I2CDriver(address)	
 		{
-			_Channels.push_back(new ModuleChannel("A1", ModulValueType::Boolean, 0, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A2", ModulValueType::Boolean, 1, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A3", ModulValueType::Boolean, 2, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A4", ModulValueType::Boolean, 3, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A5", ModulValueType::Boolean, 4, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A6", ModulValueType::Boolean, 5, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A7", ModulValueType::Boolean, 6, ModulChannelDirection::Output));
-			_Channels.push_back(new ModuleChannel("A8", ModulValueType::Boolean, 7, ModulChannelDirection::Output));
+			setupChannels(8);
 		}
 
 		void A1(bool val);

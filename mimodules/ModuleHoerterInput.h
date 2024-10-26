@@ -11,9 +11,6 @@ namespace mimodule
 	{
 	private:
 		miDriver::I2CDriver _I2CDriver;
-		uint8_t _Address;
-		
-		
 		
 	protected:
 		virtual ModuleResult init();
@@ -23,21 +20,20 @@ namespace mimodule
 		virtual ModuleResult readInputs(bool init) override;
 		virtual ModuleResult writeOutputs() override;
 		
+		void setupChannels(int num)
+		{
+			for (int i = 0; i < num; i++)
+			{
+				setChannel(i, ModulValueType::Boolean, static_cast<ModuleBitOffset>(i), ModulChannelDirection::Input);
+			}
+		}
 
 	public:
 		ModuleHoerterInput(uint8_t address,const std::string& name)
-			:ModuleBase(name, 1, 0)
+			:ModuleBase(name, 1, 0, address)
 			,_I2CDriver(address)
-			,_Address(address)
 		{
-			_Channels.push_back(new ModuleChannel("E1", ModulValueType::Boolean, 0, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E2", ModulValueType::Boolean, 1, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E3", ModulValueType::Boolean, 2, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E4", ModulValueType::Boolean, 3, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E5", ModulValueType::Boolean, 4, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E6", ModulValueType::Boolean, 5, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E7", ModulValueType::Boolean, 6, ModulChannelDirection::Input));
-			_Channels.push_back(new ModuleChannel("E8", ModulValueType::Boolean, 7, ModulChannelDirection::Input));
+			setupChannels(8);
 		}
 
 		bool E1();

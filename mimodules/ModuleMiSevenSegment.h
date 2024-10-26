@@ -26,7 +26,6 @@ namespace mimodule
 
 	class ModuleMiSevenSegment 
 		:public mimodule::ModuleBase
-		,public mimodule::ModuleValueChangedEvent
 	{
 	private:
 		typedef struct Command_t
@@ -57,7 +56,7 @@ namespace mimodule
 		virtual ModuleResult close();
 		virtual ModuleResult readInputs(bool init) override;
 		virtual ModuleResult writeOutputs() override;
-		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id)  override;
 
 	public:
 		typedef enum class controlCommand_t

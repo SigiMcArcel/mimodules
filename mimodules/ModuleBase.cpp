@@ -3,6 +3,34 @@
 #include <sstream> //std::stringstream
 #include "ModuleBase.h"
 
+void mimodule::ModuleBase::setChannel(int pin, ModulValueType type, ModuleBitOffset offset, ModulChannelDirection dir)
+{
+	std::string name("");
+	if (dir == ModulChannelDirection::Input)
+	{
+		name.append("E");
+	}
+	else
+	{
+		name.append("A");
+	}
+
+	name.append(std::to_string(_Address));
+	name.append(".");
+	name.append(std::to_string(pin));
+	ModuleChannel* channel = new ModuleChannel(name, type, offset, dir);
+	if (dir == ModulChannelDirection::Output)
+	{
+		channel->registerChannelEvent(this, true);
+	}
+	_Channels.push_back(channel);
+}
+
+int mimodule::ModuleBase::getAddress()
+{
+	return _Address;
+}
+
 const std::string mimodule::ModuleBase::name()
 {
 	return _Name;
@@ -41,6 +69,10 @@ mimodule::ModuleResult mimodule::ModuleBase::readInputs(bool init)
 mimodule::ModuleResult mimodule::ModuleBase::writeOutputs()
 {
 	return ModuleResult::Ok;
+}
+
+void mimodule::ModuleBase::ValueChanged(mimodule::ModuleValue& value, const std::string& id)
+{
 }
 
 mimodule::ModuleChannel* mimodule::ModuleBase::getChannel(std::string id)

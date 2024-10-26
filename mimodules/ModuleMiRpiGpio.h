@@ -43,7 +43,7 @@ namespace mimodule
 		virtual ModuleResult close();
 		virtual ModuleResult readInputs(bool init) override;
 		virtual ModuleResult writeOutputs() override;
-		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id);
+		virtual void ValueChanged(mimodule::ModuleValue& value, const std::string& id) override;
 
 	public:
 		ModuleMiRpiGpio(const std::string& name, const std::vector<ModuleMiRpiGpioConfiguration>& condiguration)
