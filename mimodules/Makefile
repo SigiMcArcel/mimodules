@@ -5,7 +5,7 @@ libdir=$(prefix)/lib
 
 INCLUDES = -I. -I/.
 CXXFLAGS = -fpic -Wall -Wl,--no-undefined
-LD_FLAGS = -shared -lpthread
+LD_FLAGS = -shared -lpthread -lmodbus -lmidriver -lmiutils -lasound
 
 # Automatisch alle .cpp-Dateien im aktuellen Verzeichnis als SOURCES verwenden
 SOURCES := $(wildcard *.cpp)

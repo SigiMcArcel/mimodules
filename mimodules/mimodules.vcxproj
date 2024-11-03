@@ -139,7 +139,7 @@
       <Command>cp ~/projects/mimodules/bin/ARM64/Debug//libmimodules.so /usr/lib </Command>
     </RemotePostBuildEvent>
     <Link>
-      <LibraryDependencies>pthread;midriver;miutils;asound</LibraryDependencies>
+      <LibraryDependencies>pthread;midriver;miutils;asound;modbus;</LibraryDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
