@@ -3,7 +3,7 @@
 
 void mimodule::ModuleMiPotentiometerMCP4725::getMaxDigits()
 {
-    _MaxDigits = _MCP4725MaxDigits / _VoltageRangeADC * _MaxAnalogVoltageInput;
+    _MaxDigits = _MCP4725MaxDigits / _VoltageReferenceADC * _MaxAnalogVoltageInput;
 }
 
 int32_t mimodule::ModuleMiPotentiometerMCP4725::getADCValue()

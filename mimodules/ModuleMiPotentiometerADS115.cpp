@@ -16,7 +16,13 @@ uint8_t  mimodule::ModuleMiPotentiometerADS1115::getGain(double gainAsVoltage )
 
 void mimodule::ModuleMiPotentiometerADS1115::getMaxDigits()
 {
-    _MaxDigits =  _ADS115MaxDigits / _VoltageRangeADC * _MaxAnalogVoltageInput;
+    
+    _MaxDigits = _ADS115MaxDigits / GainRanges[_Gain] * _MaxAnalogVoltageInput;
+    fprintf(stderr, "getMaxDigits _MaxDigits %f _ADS115MaxDigits %f Gain %f _MaxAnalogVoltageInput %f\n"
+        , _MaxDigits
+        , _ADS115MaxDigits
+        , GainRanges[_Gain]
+        , _MaxAnalogVoltageInput);
  
 }
 

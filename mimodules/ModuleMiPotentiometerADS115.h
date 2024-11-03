@@ -96,9 +96,10 @@ namespace mimodule
 		void getMaxDigits() override;
 
 	public:
-		ModuleMiPotentiometerADS1115(uint8_t address, double filter,double maxVoltage,const std::string& name)
-			:ModuleMiPotentiometer(address,filter,name,4096.0, maxVoltage,_ADS115MaxDigits,0)
-			, _Gain(getGain(_VoltageRangeADC))
+		//ADS1115 uses power supply as refence
+		ModuleMiPotentiometerADS1115(uint8_t address, double filter, double refVoltage, double maxVoltage, const std::string& name)
+			:ModuleMiPotentiometer(address,filter,name, refVoltage, maxVoltage)
+			, _Gain(getGain(_VoltageReferenceADC))
 		{
 			
 		}
