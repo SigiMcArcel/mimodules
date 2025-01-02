@@ -36,6 +36,9 @@ namespace mimodule
 			, _MaxAnalogVoltageInput(maxAnalogVoltageInput)
 		{
 			_Channels.push_back(new ModuleChannel("Potentiometer", ModulValueType::Double, 0, ModulChannelDirection::Input));
+			_Channels.push_back(new ModuleChannel("PotentiometerPercent", ModulValueType::Double, 0, ModulChannelDirection::Input));
+			_Channels.push_back(new ModuleChannel("PotentiometerVoltage", ModulValueType::Double, 0, ModulChannelDirection::Input));
+			_Channels.push_back(new ModuleChannel("PotentiometerDigits", ModulValueType::Double, 0, ModulChannelDirection::Input));
 		}
 
 		virtual ModuleResult init() override;

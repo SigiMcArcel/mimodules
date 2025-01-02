@@ -30,7 +30,7 @@ namespace mimodule
 
 	public:
 		ModuleGecon32Output(const std::string& device, int address, const std::string& name)
-			:ModuleBase(name, 0, 4, address)
+			:ModuleBase(name, 0, 4, static_cast<uint8_t>(address))
 			, _Device(device)
 
 		{

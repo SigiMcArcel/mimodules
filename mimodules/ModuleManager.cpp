@@ -25,7 +25,7 @@ void mimodule::ModuleManager::addModule(mimodule::ModuleInterface* module)
 	_Modules.push_back(module);
 }
 
-void mimodule::ModuleManager::timerEventOccured(void* sender, const std::string& name)
+bool mimodule::ModuleManager::timerEventOccured(void* sender, const std::string& name)
 {
 	if ("IOTimer" == name)
 	{
@@ -35,5 +35,5 @@ void mimodule::ModuleManager::timerEventOccured(void* sender, const std::string&
 			mod->writeOutputs();
 		}
 	}
-	
+	return false;
 }

@@ -28,7 +28,7 @@ namespace mimodule
 
 	public:
 		ModuleGecon32Input(const std::string& device,int address,const std::string& name)
-			:ModuleBase(name,4, 0, address)
+			:ModuleBase(name,4, 0, static_cast<uint8_t>(address))
 			, _Device(device)
 		{
 			_ModbusDriver =  miDriver::ModbusDriver::GetInstance(_Device);

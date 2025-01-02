@@ -130,6 +130,10 @@ void mimodule::ModuleMiRpiGpio::configure(std::vector<ModuleMiRpiGpioConfigurati
 			{
 				_GPIODriver.GpioEnable(conf->Number, true);
 				_GPIODriver.GpioSetDirection(conf->Number, static_cast<miDriver::GPIODirection>(conf->Dir));
+				if (conf->Dir == mimodule::ModulChannelDirection::Output)
+				{
+					(*iter)->registerChannelEvent(this,true);
+				}
 			}
 		}
 	}
@@ -200,5 +204,6 @@ mimodule::ModuleResult mimodule::ModuleMiRpiGpio::readInputs(bool init)
 
 mimodule::ModuleResult mimodule::ModuleMiRpiGpio::writeOutputs()
 {
+
 	return ModuleResult::Ok;
 }

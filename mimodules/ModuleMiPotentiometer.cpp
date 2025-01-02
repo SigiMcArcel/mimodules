@@ -29,9 +29,11 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::close()
     return ModuleResult::Ok;
 }
 
+
 mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
 {
 	double dval = static_cast<double>(getADCValue());
+    double vval = _VoltageReferenceADC / _MaxDigits * dval;
     double percent = 100.0 / _MaxDigits * dval;
     double diff = fabs(percent - _LastPercent);
     if(((_LastPercent != percent) && (diff > _Filter)) || init)
@@ -39,7 +41,19 @@ mimodule::ModuleResult mimodule::ModuleMiPotentiometer::readInputs(bool init)
         std::vector<mimodule::ModuleChannel*>::iterator iter;
         for (iter = _Channels.begin(); iter < _Channels.end(); ++iter)
         {
-            (*iter)->value().setValue<double>(percent,init);
+            if(((*iter)->id() == "Potentiometer") || ((*iter)->id() == "Potentiometer"))
+            {
+                (*iter)->value().setValue<double>(percent, init);
+            }
+            else if ((*iter)->id() == "PotentiometerDigits")
+            {
+                (*iter)->value().setValue<double>(dval, init);
+            }
+            else if ((*iter)->id() == "PotentiometerVoltage")
+            {
+                (*iter)->value().setValue<double>(vval, init);
+            }
+            
         }
     }
     _LastPercent = percent;
